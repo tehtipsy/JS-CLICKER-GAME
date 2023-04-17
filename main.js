@@ -11,7 +11,7 @@
 
 // // pollution system:
 // // pnealty for power plants and coal mine,
-// // "polluting upgrades", that subtarcte from the "ozone layer".
+// // "polluting upgrades", that subtarctes from the "ozone layer".
 
 var game = {
     score: 0,
@@ -36,7 +36,7 @@ var game = {
 
     getPollutionPerSecond: function() {
         var pollutionPerSecond = 0;
-        for (i = 0; i < upgrades.name.length; i++){
+        for (i = 0; i < upgrades.name.length; i++) {
             pollutionPerSecond += upgrades.pollutionOut[i] * upgrades.count[i];
         }
        return pollutionPerSecond
@@ -44,18 +44,26 @@ var game = {
 };
 
 var upgrades = {
-    name:["Lumberjack", "Coal Mine", "Power Plant"],
-    baseCost:[2500, 1000000, 20000000],
-    income:[1000, 50000, 1000000],
-    pollutionOut:[0, 1, 100],
-    count:[0, 0, 0],
-    // image:[],
+    name: ["Lumberjack", "Coal Mine", "Power Plant"],
+    baseCost: [2500, 10000, 200000],
+    income: [1000, 50000, 1000000],
+    pollutionOut: [0, 1, 100],
+    count: [0, 0, 0],
+    cost: [0, 0, 0], // calculate using baseCost * count(!=0) * 1.1
     maxPossible:[100000, 10000, 1000],
+    // image: [],
+
+    upgradeCost: function() {
+        for (i = 0; i < this.name.length; i++) {
+            this.cost[i] = this.baseCost[i] * 1.1;
+        }
+    },
 
     purchseUpgrade: function(index) {
-        if (game.score >= this.baseCost[index] *1.1*this.count[index]) { // fix this shit
-            game.score -= Math.ceil(this.baseCost[index] *1.1*this.count[index]);
+        if (game.score >= this.cost[index]) {
+            game.score -= Math.ceil(this.cost[index]);
             this.count[index]++;
+            this.cost[index] = this.baseCost[index] * 1.1 * this.count[index]; // check your brain
             display.updateScore();
         }
     }
@@ -66,13 +74,10 @@ var display = {
         document.getElementById("score").innerHTML = game.score;
         document.getElementById("upgrades").innerHTML = game.getScorePerSecond();
         document.getElementById("pollution").innerHTML = game.totalPollution;
-        document.getElementById("baseCost[0]").innerHTML = Math.ceil(upgrades.baseCost[0] * 1.1 * upgrades.count[0]); // fix this shit
-        document.getElementById("baseCost[1]").innerHTML = Math.ceil(upgrades.baseCost[1] * 1.1 * upgrades.count[1]); // fix this shit
+        document.getElementById("lumberjack").innerHTML = Math.ceil(upgrades.cost[0]);
+        document.getElementById("coalmine").innerHTML = Math.ceil(upgrades.cost[1]);
+        document.getElementById("powerplant").innerHTML = Math.ceil(upgrades.cost[2]);
     }
-};
-
-window.onload = function() {
-    display.updateScore();
 };
 
 setInterval(function() {
@@ -81,6 +86,11 @@ setInterval(function() {
     game.totalPollution += game.getPollutionPerSecond();
     display.updateScore();
 }, 1000);
+
+window.onload = function() {
+    upgrades.upgradeCost();
+    display.updateScore();
+};
 
 // OLD VERSION
 // var score = 0;
