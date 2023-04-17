@@ -17,6 +17,7 @@ var game = {
     score: 0,
     totalScore: 0,
     totalClicks: 0,
+    totalPollution: 0,
     clickValue: 1000,
 
     addToScore: function(amount) {
@@ -31,7 +32,15 @@ var game = {
             scorePerSecond += upgrades.income[i] * upgrades.count[i];
         }
         return scorePerSecond
-    }
+    },
+
+    getPollutionPerSecond: function() {
+        var pollutionPerSecond = 0;
+        for (i = 0; i < upgrades.name.length; i++){
+            pollutionPerSecond += upgrades.pollutionOut[i] * upgrades.count[i];
+        }
+       return pollutionPerSecond
+    },
 };
 
 var upgrades = {
@@ -44,7 +53,7 @@ var upgrades = {
     maxPossible:[100000, 10000, 1000],
 
     purchseUpgrade: function(index) {
-        if (game.score >= this.baseCost[index] *1.1*this.count[index]) {
+        if (game.score >= this.baseCost[index] *1.1*this.count[index]) { // fix this shit
             game.score -= Math.ceil(this.baseCost[index] *1.1*this.count[index]);
             this.count[index]++;
             display.updateScore();
@@ -56,8 +65,9 @@ var display = {
     updateScore: function() {
         document.getElementById("score").innerHTML = game.score;
         document.getElementById("upgrades").innerHTML = game.getScorePerSecond();
-        document.getElementById("baseCost[0]").innerHTML = Math.ceil(upgrades.baseCost[0] * 1.1 * upgrades.count[0]);
-
+        document.getElementById("pollution").innerHTML = game.totalPollution;
+        document.getElementById("baseCost[0]").innerHTML = Math.ceil(upgrades.baseCost[0] * 1.1 * upgrades.count[0]); // fix this shit
+        document.getElementById("baseCost[1]").innerHTML = Math.ceil(upgrades.baseCost[1] * 1.1 * upgrades.count[1]); // fix this shit
     }
 };
 
@@ -65,10 +75,10 @@ window.onload = function() {
     display.updateScore();
 };
 
-
 setInterval(function() {
     game.score += game.getScorePerSecond();
     game.totalScore += game.getScorePerSecond();
+    game.totalPollution += game.getPollutionPerSecond();
     display.updateScore();
 }, 1000);
 
