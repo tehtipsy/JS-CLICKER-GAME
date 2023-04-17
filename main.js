@@ -18,7 +18,7 @@ var game = {
     totalScore: 0,
     totalClicks: 0,
     totalPollution: 0,
-    clickValue: 1000,
+    clickValue: 1000, // seperate totalIncome frome clickValue
 
     addToScore: function(amount) {
         this.score += amount;
@@ -43,9 +43,9 @@ var game = {
     },
 };
 
-var upgrades = {
+var upgrades = { // add upgrades to upgrades
     name: ["Lumberjack", "Coal Mine", "Power Plant"],
-    baseCost: [2500, 10000, 200000],
+    baseCost: [2500, 10000, 200000], // fix demo costs
     income: [1000, 50000, 1000000],
     pollutionOut: [0, 1, 100],
     count: [0, 0, 0],
