@@ -3,11 +3,13 @@
         <title>Clicker Game</title>
     </head>
     <body>
-        <p> Score: <span id="score">0</span></p>
+        <p> Profit: $<span id="score">0</span></p>
+        <p> Pollution: <span id="pollution">0</span> Tons</p>
         <p> Bonus Per Second and Click: <span id="upgrades"></span></p>
 
-        <button id="clicker" onclick="scorePoints(basePoint)">Clicker</button>
-        <button onclick="upgradeScoring()">Upgrade Clicker <span id="upgradecost"></span></button>
+        <button id="clicker" onclick="scorePoints(basePoint)">Cut Down A Tree</button>
+        <button onclick="upgradeScoring()">Hire a Lumberjack Cost: $ <span id="upgradecost"></span></button>
+        <button onclick="upgradeScoringAndPollution()">Build A Coal Mine Cost: $ <span id="upgradecost2"></span></button>
     </body>
         <script src="main.js"></script>
 </html>
