@@ -7,8 +7,10 @@
         <p> Pollution: <span id="pollution">0</span> Tons</p>
         <p> Bonus Per Second and Click: <span id="upgrades"></span></p>
 
-        <button id="clicker" onclick="scorePoints(basePoint)">Cut Down A Tree</button>
-        <button onclick="upgradeScoring()">Hire a Lumberjack Cost: $ <span id="upgradecost"></span></button>
+        <!-- <button id="clicker" onclick="scorePoints(basePoint)">Cut Down A Tree</button> -->
+        <button id="clicker" onclick="game.addToScore(game.clickValue)">Cut Down A Tree</button>
+        <!-- <button onclick="upgradeScoring()">Hire a Lumberjack Cost: $ <span id="upgradecost"></span></button> -->
+        <button onclick="upgrades.purchseUpgrade(0)">Hire a Lumberjack Cost: $ <span id="baseCost[0]"></span></button>
         <button onclick="upgradeScoringAndPollution()">Build A Coal Mine Cost: $ <span id="upgradecost2"></span></button>
     </body>
         <script src="main.js"></script>
