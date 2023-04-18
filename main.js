@@ -18,7 +18,7 @@ var game = {
     totalScore: 0,
     totalClicks: 0,
     totalPollution: 0,
-    clickValue: 1000, // seperate totalIncome frome clickValue
+    clickValue: 1000, // seperate totalIncome from clickValue
 
     addToScore: function(amount) {
         this.score += amount;
@@ -50,12 +50,13 @@ var upgrades = { // add upgrades to upgrades
     pollutionOut: [0, 1, 100],
     count: [0, 0, 0],
     cost: [0, 0, 0], // calculate using baseCost * count(!=0) * 1.1
-    maxPossible:[100000, 10000, 1000],
+    maxPossible: [100000, 10000, 1000],
     // image: [],
 
     upgradeCost: function() {
         for (i = 0; i < this.name.length; i++) {
-            this.cost[i] = this.baseCost[i] * 1.1;
+            // this.cost[i] = this.baseCost[i] * 1.1;
+            this.cost[i] = this.baseCost[i]; // best diff curve?
         }
     },
 
@@ -64,6 +65,7 @@ var upgrades = { // add upgrades to upgrades
             game.score -= Math.ceil(this.cost[index]);
             this.count[index]++;
             this.cost[index] = this.baseCost[index] * 1.1 * this.count[index]; // check your brain
+            // this.cost[index] = this.cost[index] * 1.1 * this.count[index]; // better diff curve?
             display.updateScore();
         }
     }
