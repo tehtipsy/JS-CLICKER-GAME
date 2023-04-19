@@ -43,7 +43,7 @@ var game = {
     },
 };
 
-var upgrades = { // add upgrades to upgrades
+var upgrades = {
     name: ["Lumberjack", "Coal Mine", "Power Plant"],
     baseCost: [2500, 10000, 200000], // fix demo costs
     income: [1000, 50000, 1000000],
@@ -73,17 +73,19 @@ var upgrades = { // add upgrades to upgrades
 
 var subUpgrades = {
     name: ["Jacksaw", "Power Saw", "heavy logging machine",	"More Miners",	"More Power"],
+    parentUpgradeIndex: [0, 0, 0, 1, 2],
     level: [1, 2, 3, 1, 1],
-    cost: [0, 0, 0, 0, 0],
-    parentUpgrade: [upgrades[0], upgrades[0], upgrades[0], upgrades[1], upgrades[2]],
+    cost: [0, 0, 0, 0, 0], // calc 1% of parent cost
     bonusToIncome: [1.1, 1.1, 1.1, 1.1, 1.1],
     bonusToPollution: [1.1, 1.1, 1.1, 1.1, 1.1],
 
     subUpgradeCost: function() {
-        
+        for(i = 0; i < subUpgrades.name.length; i++) {
+            this.cost[i] = 0.1 * upgrades.baseCost[this.parentUpgradeIndex[i]] * this.level[i];
+        }
     },
 
-    purchseSubUpgrade: function() {
+    purchseSubUpgrade: function(index) {
 
     }
 };
@@ -94,6 +96,9 @@ var display = {
         document.getElementById("upgrades").innerHTML = game.getScorePerSecond();
         document.getElementById("pollution").innerHTML = game.totalPollution;
         document.getElementById("lumberjack").innerHTML = Math.ceil(upgrades.cost[0]);
+        document.getElementById("jacksaws").innerHTML = Math.ceil(subUpgrades.cost[0]);
+        document.getElementById("powersaws").innerHTML = Math.ceil(subUpgrades.cost[1]);
+        document.getElementById("heavylogger").innerHTML = Math.ceil(subUpgrades.cost[2]);
         document.getElementById("coalmine").innerHTML = Math.ceil(upgrades.cost[1]);
         document.getElementById("powerplant").innerHTML = Math.ceil(upgrades.cost[2]);
     }
@@ -108,6 +113,7 @@ setInterval(function() {
 
 window.onload = function() {
     upgrades.upgradeCost();
+    subUpgrades.subUpgradeCost();
     display.updateScore();
 };
 
