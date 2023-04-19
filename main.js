@@ -106,22 +106,29 @@ var subUpgrades = {
             > this.count[index]
             ) {
                 
-            // check if there are higher level upgreades "in stock"
-            // for (i = 0; i < subUpgrades.name.length; i++) { // fix this
-            //     if (this.parentUpgradeIndex[i] === this.parentUpgradeIndex[index]
-            //         && this.level[i] > this.level[index]
-            //         && this.count[i] != 0
-            //         ) {
-            //         game.score -= Math.ceil(this.cost[index]);
-            //         this.count[index]++;
-            //     }
-            // };
-            
-            // subtract cost of subUpgrade
-            game.score -= Math.ceil(this.cost[index]);
+            // check if there are higher level subUpgreades "in stock"
+            // if (this.count[index] === 0) {
+            //     for (i = 0; i < subUpgrades.name.length; i++) { // fix this
+            //         if (this.parentUpgradeIndex[i] === this.parentUpgradeIndex[index]
+            //             && this.level[i] > this.level[index]
+            //             && this.count[i] > 0
+            //             ) {
+            //             game.score -= Math.ceil(this.cost[index]);
+            //             this.count[index]++;
+            //         } else {
+            //     game.score -= Math.ceil(this.cost[index]); // subtract cost of subUpgrade
+            //     this.count[index]++; 
+            // }
+            //     };
+            // } else {
+            //     game.score -= Math.ceil(this.cost[index]); // subtract cost of subUpgrade
+            //     this.count[index]++; 
+            // }
+
+            game.score -= Math.ceil(this.cost[index]); // subtract cost of subUpgrade
             this.count[index]++;
 
-            // subtract count of other subUpgrades with the same parentUpgrade
+            // subtract count of other subUpgrades with the same parentUpgrade and lower level from stock
             for (i = 0; i < subUpgrades.name.length; i++) {
                 if (this.parentUpgradeIndex[i] === this.parentUpgradeIndex[index]
                     && this.level[i] < this.level[index] 
