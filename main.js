@@ -85,13 +85,13 @@ var upgrades = {
 };
 
 var subUpgrades = {
-    name: ["Jacksaw", "Power Saw", "Heavy Logging Machine",	"More Miners",	"More Power"],
-    parentUpgradeIndex: [0, 0, 0, 1, 2],
-    level: [1, 2, 3, 1, 1],
-    count:[0, 0, 0, 0, 0],
-    cost: [0, 0, 0, 0, 0], // calc 10% of parent cost
-    bonusToIncome: [1.1, 1.1, 1.1, 1.1, 1.1], // calc according to level
-    bonusToPollution: [1.1, 1.1, 1.1, 1.1, 1.1], // calc according to level
+    name: ["Jacksaw", "Power Saw", "Heavy Logging Machine",	"More Miners",	"Even More Miners",	"More Power"],
+    parentUpgradeIndex: [0, 0, 0, 1, 1, 2],
+    level: [1, 2, 3, 1, 2, 1],
+    count:[0, 0, 0, 0, 0, 0],
+    cost: [0, 0, 0, 0, 0, 0], // calc 10% of parent cost
+    bonusToIncome: [1.1, 1.1, 1.1, 1.1, 1.1, 1.1], // calc according to level
+    bonusToPollution: [1.1, 1.1, 1.1, 1.1, 1.1, 1.1], // calc according to level
 
     subUpgradeCost: function() {
         for(i = 0; i < subUpgrades.name.length; i++) {
@@ -101,12 +101,26 @@ var subUpgrades = {
     },
 
     purchseSubUpgrade: function(index) {
-        if (game.score >= this.cost[index] 
+        if (game.score >= this.cost[index]
                 && upgrades.count[this.parentUpgradeIndex[index]] 
                 > this.count[index]) {
             game.score -= Math.ceil(this.cost[index]);
             this.count[index]++;
+            for(i = 0; i < subUpgrades.name.length; i++) {
+                if (this.parentUpgradeIndex[i] === this.parentUpgradeIndex[index]
+                    && this.level[i] < this.level[index] 
+                    && this.count[i] > 0) {
+                    this.count[i]--;
+                }
+            };
+            // if ([index] >= 1) { // fix this
+            //     index -= 1
+            //     if (this.count[index] >= 1) {
+            //         this.count[index]--;
+            //     }
+            // };
             // this.cost[index] = this.baseCost[index] * 1.1 * this.count[index]; // check your brain
+            display.updateScore();
         }
     }
 };
@@ -130,7 +144,9 @@ var display = {
         document.getElementById("powersawscount").innerHTML = subUpgrades.count[1];
         document.getElementById("heavymachinescount").innerHTML = subUpgrades.count[2];
         document.getElementById("moreminers").innerHTML = Math.ceil(subUpgrades.cost[3]);
+        document.getElementById("evenmoreminers").innerHTML = Math.ceil(subUpgrades.cost[4]);
         document.getElementById("moreminerscount").innerHTML = subUpgrades.count[3];
+        document.getElementById("evernmoreminerscount").innerHTML = subUpgrades.count[4];
     }
 };
 
