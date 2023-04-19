@@ -102,24 +102,37 @@ var subUpgrades = {
 
     purchseSubUpgrade: function(index) {
         if (game.score >= this.cost[index]
-                && upgrades.count[this.parentUpgradeIndex[index]] 
-                > this.count[index]) {
+            && upgrades.count[this.parentUpgradeIndex[index]] 
+            > this.count[index]
+            ) {
+                
+            // check if there are higher level upgreades "in stock"
+            // for (i = 0; i < subUpgrades.name.length; i++) { // fix this
+            //     if (this.parentUpgradeIndex[i] === this.parentUpgradeIndex[index]
+            //         && this.level[i] > this.level[index]
+            //         && this.count[i] != 0
+            //         ) {
+            //         game.score -= Math.ceil(this.cost[index]);
+            //         this.count[index]++;
+            //     }
+            // };
+            
+            // subtract cost of subUpgrade
             game.score -= Math.ceil(this.cost[index]);
             this.count[index]++;
-            for(i = 0; i < subUpgrades.name.length; i++) {
+
+            // subtract count of other subUpgrades with the same parentUpgrade
+            for (i = 0; i < subUpgrades.name.length; i++) {
                 if (this.parentUpgradeIndex[i] === this.parentUpgradeIndex[index]
                     && this.level[i] < this.level[index] 
                     && this.count[i] > 0) {
                     this.count[i]--;
                 }
             };
-            // if ([index] >= 1) { // fix this
-            //     index -= 1
-            //     if (this.count[index] >= 1) {
-            //         this.count[index]--;
-            //     }
-            // };
+
+            // change subUpgrade cost for next purches
             // this.cost[index] = this.baseCost[index] * 1.1 * this.count[index]; // check your brain
+            
             display.updateScore();
         }
     }
