@@ -45,7 +45,7 @@ var game = {
        return pollutionPerSecond
     },
 };
-
+// TEST CHANGE
 var upgrades = {
     name: ["Lumberjack", "Coal Mine", "Power Plant"],
     baseCost: [2500, 10000, 200000], // fix demo costs
