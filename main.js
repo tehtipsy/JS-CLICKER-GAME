@@ -71,6 +71,23 @@ var upgrades = { // add upgrades to upgrades
     }
 };
 
+var subUpgrades = {
+    name: ["Jacksaw", "Power Saw", "heavy logging machine",	"More Miners",	"More Power"],
+    level: [1, 2, 3, 1, 1],
+    cost: [0, 0, 0, 0, 0],
+    parentUpgrade: [upgrades[0], upgrades[0], upgrades[0], upgrades[1], upgrades[2]],
+    bonusToIncome: [1.1, 1.1, 1.1, 1.1, 1.1],
+    bonusToPollution: [1.1, 1.1, 1.1, 1.1, 1.1],
+
+    subUpgradeCost: function() {
+        
+    },
+
+    purchseSubUpgrade: function() {
+
+    }
+};
+
 var display = {
     updateScore: function() {
         document.getElementById("score").innerHTML = game.score;
