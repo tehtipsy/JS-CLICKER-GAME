@@ -55,8 +55,7 @@ var upgrades = {
 
     upgradeCost: function() {
         for (i = 0; i < this.name.length; i++) {
-            // this.cost[i] = this.baseCost[i] * 1.1;
-            this.cost[i] = this.baseCost[i]; // best diff curve?
+            this.cost[i] = this.baseCost[i];
         }
     },
 
@@ -75,7 +74,8 @@ var subUpgrades = {
     name: ["Jacksaw", "Power Saw", "heavy logging machine",	"More Miners",	"More Power"],
     parentUpgradeIndex: [0, 0, 0, 1, 2],
     level: [1, 2, 3, 1, 1],
-    cost: [0, 0, 0, 0, 0], // calc 1% of parent cost
+    count:[0, 0, 0, 0, 0],
+    cost: [0, 0, 0, 0, 0], // calc 10% of parent cost
     bonusToIncome: [1.1, 1.1, 1.1, 1.1, 1.1],
     bonusToPollution: [1.1, 1.1, 1.1, 1.1, 1.1],
 
@@ -86,7 +86,10 @@ var subUpgrades = {
     },
 
     purchseSubUpgrade: function(index) {
+        if (game.score >= this.cost[index] && upgrades.count[this.parentUpgradeIndex[index]] > this.count[index]) {
+            game.score -= Math.ceil(this.cost[index]);
 
+        }
     }
 };
 
@@ -101,6 +104,9 @@ var display = {
         document.getElementById("heavylogger").innerHTML = Math.ceil(subUpgrades.cost[2]);
         document.getElementById("coalmine").innerHTML = Math.ceil(upgrades.cost[1]);
         document.getElementById("powerplant").innerHTML = Math.ceil(upgrades.cost[2]);
+        document.getElementById("lumberjackcount").innerHTML = upgrades.count[0];
+        document.getElementById("coalminecount").innerHTML = upgrades.count[1];
+        document.getElementById("powerplantcount").innerHTML = upgrades.count[2];
     }
 };
 
@@ -116,47 +122,3 @@ window.onload = function() {
     subUpgrades.subUpgradeCost();
     display.updateScore();
 };
-
-// OLD VERSION
-// var score = 0;
-// var basePoint = 1000;
-
-// var upgradeCost = 2500;
-// let upgrades = 0;
-
-// document.getElementById("upgradecost").innerHTML = upgradeCost;
-// document.getElementById("upgrades").innerHTML = upgrades;
-
-// var maxLumberjacks = 100000;
-// let maxScore = 3000000000000; // MAX NUMBER OF TREES TO CUT 
-
-// var pollution = 0;
-// let maxPollution = 1000000000000; // POLLUTION ENDGAME
-
-// var coal = 0;
-// let maxCoal = 1000000000000; // COAL ENDGAME
-
-// function upgradeScoring() {
-//     if (score >= upgradeCost) {
-//         score -= upgradeCost;
-//         upgrades = upgrades + basePoint; // add scoring multiplyers HERE
-//         upgradeCost = Math.round(upgradeCost * 1.15);
-
-//         document.getElementById("score").innerHTML = score;
-//         document.getElementById("upgradecost").innerHTML = upgradeCost;
-//         document.getElementById("upgrades").innerHTML = upgrades;
-//     }
-// }
-
-// function scorePoints(amountOfPoints) {
-//     if (upgrades >= 1) {
-//         amountOfPoints += upgrades;
-//     }
-//     score += amountOfPoints;
-//     document.getElementById("score").innerHTML = score;
-// }
-
-// setInterval(function() {
-//     score += upgrades;
-//     document.getElementById("score").innerHTML = score;
-// }, 1000);
