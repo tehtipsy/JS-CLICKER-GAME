@@ -18,7 +18,7 @@ var game = {
     totalScore: 0,
     totalClicks: 0,
     totalPollution: 0,
-    clickValue: 1000, // seperate totalIncome from clickValue
+    clickValue: 1000, // seperate IncomePerClick from clickValue
 
     addToScore: function(amount) {
         this.score += amount;
@@ -30,9 +30,13 @@ var game = {
         var scorePerSecond = 0;
         for (i = 0; i < upgrades.name.length; i++) {
             scorePerSecond += upgrades.income[i] * upgrades.count[i];
-        }
+        };
         for (i = 0; i < subUpgrades.name.length; i++) {
-            scorePerSecond += upgrades.income[subUpgrades.parentUpgradeIndex[i]] * 0.1 * subUpgrades.bonusToIncome[i] * subUpgrades.count[i];
+            scorePerSecond += 0.01
+                * upgrades.income[subUpgrades.parentUpgradeIndex[i]] 
+                * subUpgrades.bonusToIncome[i] 
+                * subUpgrades.count[i] 
+                * subUpgrades.level[i];
         }
         return scorePerSecond
     },
@@ -41,11 +45,18 @@ var game = {
         var pollutionPerSecond = 0;
         for (i = 0; i < upgrades.name.length; i++) {
             pollutionPerSecond += upgrades.pollutionOut[i] * upgrades.count[i];
+        }        
+        for (i = 0; i < subUpgrades.name.length; i++) {
+            pollutionPerSecond += 0.01 *
+            upgrades.pollutionOut[subUpgrades.parentUpgradeIndex[i]] 
+            * subUpgrades.count[i] 
+            * subUpgrades.level[i]
+            * subUpgrades.bonusToPollution[i];
         }
        return pollutionPerSecond
     },
 };
-// TEST CHANGE
+
 var upgrades = {
     name: ["Lumberjack", "Coal Mine", "Power Plant"],
     baseCost: [2500, 10000, 200000], // fix demo costs
@@ -84,12 +95,15 @@ var subUpgrades = {
 
     subUpgradeCost: function() {
         for(i = 0; i < subUpgrades.name.length; i++) {
-            this.cost[i] = 0.1 * upgrades.baseCost[this.parentUpgradeIndex[i]] * this.level[i];
+            this.cost[i] = 0.1 
+            * upgrades.baseCost[this.parentUpgradeIndex[i]] * this.level[i];
         }
     },
 
     purchseSubUpgrade: function(index) {
-        if (game.score >= this.cost[index] && upgrades.count[this.parentUpgradeIndex[index]] > this.count[index]) {
+        if (game.score >= this.cost[index] 
+                && upgrades.count[this.parentUpgradeIndex[index]] 
+                > this.count[index]) {
             game.score -= Math.ceil(this.cost[index]);
             this.count[index]++;
             // this.cost[index] = this.baseCost[index] * 1.1 * this.count[index]; // check your brain
@@ -101,7 +115,8 @@ var display = {
     updateScore: function() {
         document.getElementById("score").innerHTML = game.score;
         document.getElementById("upgrades").innerHTML = game.getScorePerSecond();
-        document.getElementById("pollution").innerHTML = game.totalPollution;
+        document.getElementById("pollution").innerHTML = Math.ceil(game.totalPollution);
+        document.getElementById("pollutionpersec").innerHTML = game.getPollutionPerSecond();
         document.getElementById("lumberjack").innerHTML = Math.ceil(upgrades.cost[0]);
         document.getElementById("jacksaws").innerHTML = Math.ceil(subUpgrades.cost[0]);
         document.getElementById("powersaws").innerHTML = Math.ceil(subUpgrades.cost[1]);
@@ -114,10 +129,12 @@ var display = {
         document.getElementById("jacksawscount").innerHTML = subUpgrades.count[0];
         document.getElementById("powersawscount").innerHTML = subUpgrades.count[1];
         document.getElementById("heavymachinescount").innerHTML = subUpgrades.count[2];
+        document.getElementById("moreminers").innerHTML = Math.ceil(subUpgrades.cost[3]);
+        document.getElementById("moreminerscount").innerHTML = subUpgrades.count[3];
     }
 };
 
-setInterval(function() {
+setInterval(function() { // Income Cycle
     game.score += game.getScorePerSecond();
     game.totalScore += game.getScorePerSecond();
     game.totalPollution += game.getPollutionPerSecond();

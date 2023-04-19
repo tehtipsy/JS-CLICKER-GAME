@@ -4,13 +4,15 @@
     </head>
     <body>
         <p> Profit: $ <span id="score">0</span></p>
-        <p> Pollution: <span id="pollution">0</span> Tons</p>
         <p> Bonus Per Second: $ <span id="upgrades"></span></p>
+        <p> Pollution: <span id="pollution">0</span> Tons</p>
+        <p> Pollution Per Second: <span id="pollutionpersec">0</span> Tons</p>
         <p> Lumberjacks: <span id="lumberjackcount"></span></p>
         <p> Jacksaws: <span id="jacksawscount"></span></p>
         <p> Power Saws: <span id="powersawscount"></span></p>
         <p> Heavy Logging Machines: <span id="heavymachinescount"></span></p>
         <p> Coal Mines: <span id="coalminecount"></span></p>
+        <p> More Miners: <span id="moreminerscount"></span></p>
         <p> Power Plants: <span id="powerplantcount"></span></p>
 
         <button id="clicker" onclick="game.addToScore(game.clickValue)">Cut Down A Tree</button>
@@ -19,6 +21,7 @@
         <button onclick="subUpgrades.purchseSubUpgrade(1)">Buy A Power Saw Cost: $ <span id="powersaws"></span></button>
         <button onclick="subUpgrades.purchseSubUpgrade(2)">Buy A Heavy Machine Cost: $ <span id="heavylogger"></span></button>
         <button onclick="upgrades.purchseUpgrade(1)">Build A Coal Mine Cost: $ <span id="coalmine"></span></button>
+        <button onclick="subUpgrades.purchseSubUpgrade(3)">Hire More Miners Cost: $ <span id="moreminers"></span></button>
         <button onclick="upgrades.purchseUpgrade(2)">Build A Power Plant Cost: $ <span id="powerplant"></span></button>
     </body>
         <script src="main.js"></script>
