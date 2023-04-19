@@ -31,6 +31,9 @@ var game = {
         for (i = 0; i < upgrades.name.length; i++) {
             scorePerSecond += upgrades.income[i] * upgrades.count[i];
         }
+        for (i = 0; i < subUpgrades.name.length; i++) {
+            scorePerSecond += upgrades.income[subUpgrades.parentUpgradeIndex[i]] * 0.1 * subUpgrades.bonusToIncome[i] * subUpgrades.count[i];
+        }
         return scorePerSecond
     },
 
@@ -71,13 +74,13 @@ var upgrades = {
 };
 
 var subUpgrades = {
-    name: ["Jacksaw", "Power Saw", "heavy logging machine",	"More Miners",	"More Power"],
+    name: ["Jacksaw", "Power Saw", "Heavy Logging Machine",	"More Miners",	"More Power"],
     parentUpgradeIndex: [0, 0, 0, 1, 2],
     level: [1, 2, 3, 1, 1],
     count:[0, 0, 0, 0, 0],
     cost: [0, 0, 0, 0, 0], // calc 10% of parent cost
-    bonusToIncome: [1.1, 1.1, 1.1, 1.1, 1.1],
-    bonusToPollution: [1.1, 1.1, 1.1, 1.1, 1.1],
+    bonusToIncome: [1.1, 1.1, 1.1, 1.1, 1.1], // calc according to level
+    bonusToPollution: [1.1, 1.1, 1.1, 1.1, 1.1], // calc according to level
 
     subUpgradeCost: function() {
         for(i = 0; i < subUpgrades.name.length; i++) {
@@ -88,7 +91,8 @@ var subUpgrades = {
     purchseSubUpgrade: function(index) {
         if (game.score >= this.cost[index] && upgrades.count[this.parentUpgradeIndex[index]] > this.count[index]) {
             game.score -= Math.ceil(this.cost[index]);
-
+            this.count[index]++;
+            // this.cost[index] = this.baseCost[index] * 1.1 * this.count[index]; // check your brain
         }
     }
 };
@@ -107,6 +111,9 @@ var display = {
         document.getElementById("lumberjackcount").innerHTML = upgrades.count[0];
         document.getElementById("coalminecount").innerHTML = upgrades.count[1];
         document.getElementById("powerplantcount").innerHTML = upgrades.count[2];
+        document.getElementById("jacksawscount").innerHTML = subUpgrades.count[0];
+        document.getElementById("powersawscount").innerHTML = subUpgrades.count[1];
+        document.getElementById("heavymachinescount").innerHTML = subUpgrades.count[2];
     }
 };
 
