@@ -68,15 +68,20 @@ var game = {
     getFossilFuelsPerSecond: function() { // add check for resource type
         var fossilFuelsPerSecond = 0;
         for (i = 0; i < upgrades.name.length; i++) {
-            fossilFuelsPerSecond += upgrades.resourceOutput[i] * upgrades.count[i];
+            if (upgrades.outputType[i] == "Wood" 
+            || upgrades.outputType[i] == "Coal") { // fix this shit //
+                fossilFuelsPerSecond += upgrades.resourceOutput[i] * upgrades.count[i];
+            }
         }        
         for (i = 0; i < subUpgrades.name.length; i++) {
+            if (upgrades.outputType[subUpgrades.parentUpgradeIndex[i]] == "Wood" 
+            || upgrades.outputType[subUpgrades.parentUpgradeIndex[i]] == "Coal") { // fix this shit //
             fossilFuelsPerSecond += 0.1 *
             upgrades.resourceOutput[subUpgrades.parentUpgradeIndex[i]] 
             * subUpgrades.count[i] 
             * subUpgrades.level[i]
-        }
-       return fossilFuelsPerSecond
+            }
+        } return fossilFuelsPerSecond
     },
 
     // fossilFuelsUsagePerSecond ??? //
