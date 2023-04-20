@@ -114,28 +114,28 @@ var subUpgrades = {
     purchseSubUpgrade: function(index) {
         if (game.score >= this.cost[index]
             && upgrades.count[this.parentUpgradeIndex[index]] > this.count[index]) {
-                // check if higher level upgrades are "in stock" //
-                subUpgradesInStock = this.getSubUpgradesInStock(index);
-                if (subUpgradesInStock === 0) {
+            // check if higher level upgrades are "in stock" //
+            subUpgradesInStock = this.getSubUpgradesInStock(index);
+            if (subUpgradesInStock === 0) {
 
-                    // subtract cost of subUpgrade //
-                    game.score -= Math.ceil(this.cost[index]); 
-                    this.count[index]++;
+                // subtract cost of subUpgrade //
+                game.score -= Math.ceil(this.cost[index]); 
+                this.count[index]++;
 
-                    // subtract count of other subUpgrades with the same parentUpgrade and lower level from stock //
-                    for (i = 0; i < subUpgrades.name.length; i++) {
-                        if (this.parentUpgradeIndex[i] === this.parentUpgradeIndex[index]
-                            && this.level[i] < this.level[index] 
-                            && this.count[i] > 0) {
-                            this.count[i]--;
-                        }
-                    };
+                // subtract count of other subUpgrades with the same parentUpgrade and lower level from stock //
+                for (i = 0; i < subUpgrades.name.length; i++) {
+                    if (this.parentUpgradeIndex[i] === this.parentUpgradeIndex[index]
+                        && this.level[i] < this.level[index] 
+                        && this.count[i] > 0) {
+                        this.count[i]--;
+                    }
+                };
 
-                // change subUpgrade cost for next purches //
-                // this.cost[index] = this.baseCost[index] * 1.1 * this.count[index]; // check your brain
-                
-                display.updateScore();
-                }
+            // change subUpgrade cost for next purches //
+            // this.cost[index] = this.baseCost[index] * 1.1 * this.count[index]; // check your brain
+            
+            display.updateScore();
+            }
         }
     }
 };
