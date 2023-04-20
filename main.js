@@ -100,23 +100,33 @@ var subUpgrades = {
         }
     },
 
-    getSubUpgradesInStock: function() {
+    // getSubUpgradesInStock: function() { // ALL subUpgrades
+    //     var subUpgradesInStock = 0;
+    //     for (i = 0; i < subUpgrades.name.length; i++) { // fix this
+    //         subUpgradesInStock += this.count[i] 
+    //     }
+    //     return subUpgradesInStock;
+    // },
+
+    getSubUpgradesInStock: function(index) { // subUpgrades with same prnt and higher lvl
         var subUpgradesInStock = 0;
-        for (i = 0; i < subUpgrades.name.length; i++) { // fix this
-            subUpgradesInStock += this.count[i] 
+        for (i = 0; i < subUpgrades.name.length; i++) {
+            if (this.parentUpgradeIndex[i] === this.parentUpgradeIndex[index]
+                && this.level[i] > this.level[index]) {
+                subUpgradesInStock += this.count[i] 
+            }
         }
         return subUpgradesInStock;
     },
 
     purchseSubUpgrade: function(index) {
         if (game.score >= this.cost[index]
-            && upgrades.count[this.parentUpgradeIndex[index]] 
-            > this.count[index]
-            ) {
+            && upgrades.count[this.parentUpgradeIndex[index]] > this.count[index]) {
+                // check if higher level upgrades are "in stock" //
+                subUpgradesInStock = this.getSubUpgradesInStock(index);
             
             // subUpgradesInStock = this.getSubUpgradesInStock();
-            subUpgradesInStock = this.getSubUpgradesInStock(index); // change func to filter by level and parentIndex
-            alert(subUpgradesInStock);
+            // alert(subUpgradesInStock);
 
             // function getSubUpgradesInStock() {
             // var subUpgradesInStock = 0;
@@ -152,10 +162,10 @@ var subUpgrades = {
             //     this.count[index]++; 
             // }
 
-            game.score -= Math.ceil(this.cost[index]); // subtract cost of subUpgrade
+            game.score -= Math.ceil(this.cost[index]); // subtract cost of subUpgrade //
             this.count[index]++;
 
-            // subtract count of other subUpgrades with the same parentUpgrade and lower level from stock
+            // subtract count of other subUpgrades with the same parentUpgrade and lower level from stock //
             for (i = 0; i < subUpgrades.name.length; i++) {
                 if (this.parentUpgradeIndex[i] === this.parentUpgradeIndex[index]
                     && this.level[i] < this.level[index] 
