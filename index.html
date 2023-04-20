@@ -4,10 +4,33 @@
     </head>
     <body>
         <h3>
-            <p> Profit: $ <span id="score">0</span></p>
-            <p> Bonus Per Second: $ <span id="upgrades"></span></p>
-            <p> Pollution: <span id="pollution">0</span> Tons</p>
-            <p> Pollution Per Second: <span id="pollutionpersec">0</span> Tons</p>
+            <p>
+                CLICKS: <span id="totalclicks">0</span>
+            </p>
+            <p> 
+                Profit: $ <span id="score">0</span>
+                <br>
+                Bonus Per Second: $ <span id="scorepersec"></span>
+            </p>
+            <p>
+                Pollution: <span id="pollution">0</span> Tons
+                <br>
+                Pollution Per Second: <span id="pollutionpersec">0</span> Tons
+            </p>
+            <p>
+                Fossil Fuels: <span id="totalfossilfuel">0</span> Tons
+                <br>
+                Fossil Fuels Per Second: <span id="fossilfuelpersec">0</span> Tons
+            </p>
+            <p>
+                <h5>
+                    Trees: <span id="totaltrees">0</span> Tons
+                    <br>
+                    Coal: <span id="totalcoal">0</span> Tons
+                    <br>
+                    Energy: <span id="totalenergy">0</span> Kva
+                </h5>
+            </p>
         </h3>
         <h3>
         <p> Lumberjacks: <span id="lumberjackcount"></span>
@@ -27,13 +50,22 @@
         <h5>
             More Miners: <span id="moreminerscount"></span>
             <br>
-            Even More Miners: <span id="evernmoreminerscount"></span>
+            Even More Miners: <span id="evenmoreminerscount"></span>            
+            <br>
+            Mine Shafts: <span id="mineshaftscount"></span>
         </h5>
         </p>
         <p> 
         <h3>
             Power Plants: <span id="powerplantcount"></span>
         </h3>
+        <h5>
+            More Power: <span id="morepowercount"></span>
+            <br>
+            Even More Power: <span id="evenmorepowercount"></span>
+            <br>
+            The Most Power: <span id="mostpowercount"></span>
+        </h5>
         </p>
 
         <button id="clicker" onclick="game.addToScore(game.clickValue)">Cut Down A Tree</button>
@@ -46,8 +78,12 @@
         <button onclick="upgrades.purchseUpgrade(1)">Build A Coal Mine <br> Cost: $ <span id="coalmine"></span></button>->
         <button onclick="subUpgrades.purchseSubUpgrade(3)">Hire More Miners <br> Cost: $ <span id="moreminers"></span></button>->
         <button onclick="subUpgrades.purchseSubUpgrade(4)">Hire Even More Miners <br> Cost: $ <span id="evenmoreminers"></span></button>->
+        <button onclick="subUpgrades.purchseSubUpgrade(5)">Build Mine Shafts <br> Cost: $ <span id="mineshafts"></span></button>
         <br><br>
         <button onclick="upgrades.purchseUpgrade(2)">Build A Power Plant <br> Cost: $ <span id="powerplant"></span></button>->
+        <button onclick="subUpgrades.purchseSubUpgrade(6)">More Power <br> Cost: $ <span id="morepower"></span></button>->
+        <button onclick="subUpgrades.purchseSubUpgrade(7)">Even More Power <br> Cost: $ <span id="evenmorepower"></span></button>->
+        <button onclick="subUpgrades.purchseSubUpgrade(8)">The Most Power <br> Cost: $ <span id="mostpower"></span></button>
     </body>
         <script src="main.js"></script>
 </html>

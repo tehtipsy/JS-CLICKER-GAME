@@ -1,6 +1,5 @@
 // // upgarde types:
 // // 1. Lumberjack
-// // BASE COST + 10% * NUMBER OF WORKERS
 // // 1.1 Jacksaw
 // // 1.2 Power Saw
 // // 1.3 heavy logging machine
@@ -13,16 +12,26 @@
 // // pnealty for power plants and coal mine,
 // // "polluting upgrades", that subtarctes from the "ozone layer".
 
+// // fuel system:
+// // fuels are used in power plants to create stored energy and income.
+
+// // energy system:
+// // ???
+// // PROFIT
+
 var game = {
     score: 0,
     totalScore: 0,
     totalClicks: 0,
     totalPollution: 0,
-    clickValue: 1000, // seperate IncomePerClick from clickValue
+    clickValue: 1000, // seperate IncomePerClick from clickValue //
+    totalFossilFuel: 0, // seperate to resources //
 
-    addToScore: function(amount) {
+    addToScore: function(amount) { // change to count clicks and then calc profit, add check for each button //
         this.score += amount;
         this.totalScore += amount;
+        gameResource.count[0]++; // add to fossil fuel counter
+        game.totalFossilFuel++; // add to fossil fuel counter
         display.updateScore();
     },
 
@@ -54,17 +63,61 @@ var game = {
             * subUpgrades.bonusToPollution[i];
         }
        return pollutionPerSecond
+    },    
+    
+    getFossilFuelsPerSecond: function() {
+        var fossilFuelsPerSecond = 0;
+        for (i = 0; i < upgrades.name.length; i++) {
+            fossilFuelsPerSecond += upgrades.resourceOutput[i] * upgrades.count[i];
+        }        
+        for (i = 0; i < subUpgrades.name.length; i++) {
+            fossilFuelsPerSecond += 0.1 *
+            upgrades.resourceOutput[subUpgrades.parentUpgradeIndex[i]] 
+            * subUpgrades.count[i] 
+            * subUpgrades.level[i]
+        }
+       return fossilFuelsPerSecond
+    },
+
+    // fossilFuelsUsagePerSecond ??? //
+};
+
+var gameResource = {
+    name: ["Wood", "Coal", "Energy"], // Trees, Coal, Natural Gas, Energy, Water, ... Money??// 
+    resourceType: ["Fossil Fuel", "Fossil Fuel", "Stored Energy"], // Fossil Fuel, Stored Energy, Clean Fuel, ..., ... //
+    mesureUnit: ["Tons", "Tons", "KVAs"], // $$$, Tons, KVA, ..., ... //
+    count: [0, 0, 0],
+
+    countResource: function(index) { // use the resource index I guess
+        var ResourcePerSecond = 0;
+        for (i = 0; i < upgrades.name.length; i++) {
+            if (this.name[index] == upgrades.outputType[i]) {
+                ResourcePerSecond += upgrades.resourceOutput[i] 
+                * upgrades.count[i] 
+            } 
+        }
+        for (i = 0; i < subUpgrades.name.length; i++) {
+            if (this.name[index] == upgrades.outputType[subUpgrades.parentUpgradeIndex[i]]) {
+                ResourcePerSecond += 0.01 
+                * upgrades.resourceOutput[subUpgrades.parentUpgradeIndex[i]] 
+                * subUpgrades.count[i] 
+                * subUpgrades.level[i] 
+            }
+        } return ResourcePerSecond
     },
 };
 
 var upgrades = {
-    name: ["Lumberjack", "Coal Mine", "Power Plant"],
+    name: ["Lumberjack", "Coal Mine", "Power Plant"], // Offshore Gas Rig, Hydroelectric Power Plant, Solar Power Plant //
     baseCost: [2500, 10000, 200000], // fix demo costs
     income: [1000, 50000, 1000000],
     pollutionOut: [0, 1, 100],
     count: [0, 0, 0],
     cost: [0, 0, 0], // calculate using baseCost * count(!=0) * 1.1
     maxPossible: [100000, 10000, 1000],
+    resourceOutput: [10, 100, 100],
+    fuelType: ["no fuel", "no fuel", "Fossil Fuel"],
+    outputType: ["Wood", "Coal", "Energy"],
     // image: [],
 
     upgradeCost: function() {
@@ -85,13 +138,13 @@ var upgrades = {
 };
 
 var subUpgrades = {
-    name: ["Jacksaw", "Power Saw", "Heavy Logging Machine",	"More Miners",	"Even More Miners",	"More Power"],
-    parentUpgradeIndex: [0, 0, 0, 1, 1, 2],
-    level: [1, 2, 3, 1, 2, 1],
-    count:[0, 0, 0, 0, 0, 0],
-    cost: [0, 0, 0, 0, 0, 0], // calc 10% of parent cost
-    bonusToIncome: [1.1, 1.1, 1.1, 1.1, 1.1, 1.1], // calc according to level
-    bonusToPollution: [1.1, 1.1, 1.1, 1.1, 1.1, 1.1], // calc according to level
+    name: ["Jacksaw", "Power Saw", "Heavy Logging Machine",	"More Miners",	"Even More Miners", "Mine Shafts", "More Power", "Even More Power", "Most Power"],
+    parentUpgradeIndex: [0, 0, 0, 1, 1, 1, 2, 2, 2],
+    level: [1, 2, 3, 1, 2, 3, 1, 2, 3],
+    count:[0, 0, 0, 0, 0, 0, 0, 0, 0],
+    cost: [0, 0, 0, 0, 0, 0, 0, 0, 0], // calc 10% of parent cost
+    bonusToIncome: [1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1], // calc according to level
+    bonusToPollution: [1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1], // calc according to level
 
     subUpgradeCost: function() {
         for(i = 0; i < subUpgrades.name.length; i++) {
@@ -107,8 +160,7 @@ var subUpgrades = {
                 && this.level[i] > this.level[index]) {
                 subUpgradesInStock += this.count[i] 
             }
-        }
-        return subUpgradesInStock;
+        } return subUpgradesInStock;
     },
 
     purchseSubUpgrade: function(index) {
@@ -142,26 +194,47 @@ var subUpgrades = {
 
 var display = {
     updateScore: function() {
-        document.getElementById("score").innerHTML = game.score;
-        document.getElementById("upgrades").innerHTML = game.getScorePerSecond();
-        document.getElementById("pollution").innerHTML = Math.ceil(game.totalPollution);
+        // bonuses per sec //
+        document.getElementById("scorepersec").innerHTML = game.getScorePerSecond();
         document.getElementById("pollutionpersec").innerHTML = game.getPollutionPerSecond();
+        document.getElementById("fossilfuelpersec").innerHTML = game.getFossilFuelsPerSecond();        
+        // game counters //
+        document.getElementById("totalclicks").innerHTML = game.score; // count clicks on base and upgrade buttons
+        document.getElementById("score").innerHTML = game.score;
+        document.getElementById("pollution").innerHTML = Math.ceil(game.totalPollution);
+        document.getElementById("totalfossilfuel").innerHTML = Math.ceil(game.totalFossilFuel);
+        // resource count //
+        document.getElementById("totaltrees").innerHTML = Math.ceil(gameResource.count[0]);
+        document.getElementById("totalcoal").innerHTML = Math.ceil(gameResource.count[1]);
+        document.getElementById("totalenergy").innerHTML = Math.ceil(gameResource.count[2]);
+        // upgrade cost //
         document.getElementById("lumberjack").innerHTML = Math.ceil(upgrades.cost[0]);
+        document.getElementById("coalmine").innerHTML = Math.ceil(upgrades.cost[1]);
+        document.getElementById("powerplant").innerHTML = Math.ceil(upgrades.cost[2]);
+        // subUpgrade cost //
         document.getElementById("jacksaws").innerHTML = Math.ceil(subUpgrades.cost[0]);
         document.getElementById("powersaws").innerHTML = Math.ceil(subUpgrades.cost[1]);
         document.getElementById("heavylogger").innerHTML = Math.ceil(subUpgrades.cost[2]);
-        document.getElementById("coalmine").innerHTML = Math.ceil(upgrades.cost[1]);
-        document.getElementById("powerplant").innerHTML = Math.ceil(upgrades.cost[2]);
+        document.getElementById("moreminers").innerHTML = Math.ceil(subUpgrades.cost[3]);
+        document.getElementById("evenmoreminers").innerHTML = Math.ceil(subUpgrades.cost[4]);
+        document.getElementById("mineshafts").innerHTML = Math.ceil(subUpgrades.cost[5]);
+        document.getElementById("morepower").innerHTML = Math.ceil(subUpgrades.cost[6]);
+        document.getElementById("evenmorepower").innerHTML = Math.ceil(subUpgrades.cost[7]);
+        document.getElementById("mostpower").innerHTML = Math.ceil(subUpgrades.cost[8]);
+        // upgrade count //
         document.getElementById("lumberjackcount").innerHTML = upgrades.count[0];
         document.getElementById("coalminecount").innerHTML = upgrades.count[1];
         document.getElementById("powerplantcount").innerHTML = upgrades.count[2];
+        // subUpgrade count //
         document.getElementById("jacksawscount").innerHTML = subUpgrades.count[0];
         document.getElementById("powersawscount").innerHTML = subUpgrades.count[1];
         document.getElementById("heavymachinescount").innerHTML = subUpgrades.count[2];
-        document.getElementById("moreminers").innerHTML = Math.ceil(subUpgrades.cost[3]);
-        document.getElementById("evenmoreminers").innerHTML = Math.ceil(subUpgrades.cost[4]);
         document.getElementById("moreminerscount").innerHTML = subUpgrades.count[3];
-        document.getElementById("evernmoreminerscount").innerHTML = subUpgrades.count[4];
+        document.getElementById("evenmoreminerscount").innerHTML = subUpgrades.count[4];
+        document.getElementById("mineshaftscount").innerHTML = subUpgrades.count[5];
+        document.getElementById("morepowercount").innerHTML = subUpgrades.count[6];
+        document.getElementById("evenmorepowercount").innerHTML = subUpgrades.count[7];
+        document.getElementById("mostpowercount").innerHTML = subUpgrades.count[8];
     }
 };
 
@@ -169,6 +242,11 @@ setInterval(function() { // Income Cycle
     game.score += game.getScorePerSecond();
     game.totalScore += game.getScorePerSecond();
     game.totalPollution += game.getPollutionPerSecond();
+    game.totalFossilFuel += game.getFossilFuelsPerSecond();
+    // totalResourceCount //
+    gameResource.count[0] += gameResource.countResource(0); // Wood //
+    gameResource.count[1] += gameResource.countResource(1); // Coal //
+    gameResource.count[2] += gameResource.countResource(2); // Energy //
     display.updateScore();
 }, 1000);
 
