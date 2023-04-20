@@ -100,14 +100,6 @@ var subUpgrades = {
         }
     },
 
-    // getSubUpgradesInStock: function() { // ALL subUpgrades
-    //     var subUpgradesInStock = 0;
-    //     for (i = 0; i < subUpgrades.name.length; i++) { // fix this
-    //         subUpgradesInStock += this.count[i] 
-    //     }
-    //     return subUpgradesInStock;
-    // },
-
     getSubUpgradesInStock: function(index) { // subUpgrades with same prnt and higher lvl
         var subUpgradesInStock = 0;
         for (i = 0; i < subUpgrades.name.length; i++) {
@@ -124,60 +116,26 @@ var subUpgrades = {
             && upgrades.count[this.parentUpgradeIndex[index]] > this.count[index]) {
                 // check if higher level upgrades are "in stock" //
                 subUpgradesInStock = this.getSubUpgradesInStock(index);
-            
-            // subUpgradesInStock = this.getSubUpgradesInStock();
-            // alert(subUpgradesInStock);
+                if (subUpgradesInStock === 0) {
 
-            // function getSubUpgradesInStock() {
-            // var subUpgradesInStock = 0;
-            // for (i = 0; i < subUpgrades.name.length; i++) { // fix this
-            //     this.count[i] += subUpgradesInStock
-            // }
-            // return subUpgradesInStock;
-            // }
-            // for (i = 0; i < subUpgrades.name.length; i++) { // fix this
-            //     if (this.parentUpgradeIndex[i] === this.parentUpgradeIndex[index]
-            //         && this.level[i] > this.level[index]
-            //         && this.count[i] > upgrades.count[this.parentUpgradeIndex[index]]) {
-            //             subUpgradesInStock += this.count[i]
-            //     } 
-            //     return subUpgradesInStock
-            // };
-            // check if there are higher level subUpgreades "in stock"
-            // if (this.count[index] === 0) {
-            //     for (i = 0; i < subUpgrades.name.length; i++) { // fix this
-            //         if (this.parentUpgradeIndex[i] === this.parentUpgradeIndex[index]
-            //             && this.level[i] > this.level[index]
-            //             && this.count[i] > 0
-            //             ) {
-            //             game.score -= Math.ceil(this.cost[index]);
-            //             this.count[index]++;
-            //         } else {
-            //     game.score -= Math.ceil(this.cost[index]); // subtract cost of subUpgrade
-            //     this.count[index]++; 
-            // }
-            //     };
-            // } else {
-            //     game.score -= Math.ceil(this.cost[index]); // subtract cost of subUpgrade
-            //     this.count[index]++; 
-            // }
+                    // subtract cost of subUpgrade //
+                    game.score -= Math.ceil(this.cost[index]); 
+                    this.count[index]++;
 
-            game.score -= Math.ceil(this.cost[index]); // subtract cost of subUpgrade //
-            this.count[index]++;
+                    // subtract count of other subUpgrades with the same parentUpgrade and lower level from stock //
+                    for (i = 0; i < subUpgrades.name.length; i++) {
+                        if (this.parentUpgradeIndex[i] === this.parentUpgradeIndex[index]
+                            && this.level[i] < this.level[index] 
+                            && this.count[i] > 0) {
+                            this.count[i]--;
+                        }
+                    };
 
-            // subtract count of other subUpgrades with the same parentUpgrade and lower level from stock //
-            for (i = 0; i < subUpgrades.name.length; i++) {
-                if (this.parentUpgradeIndex[i] === this.parentUpgradeIndex[index]
-                    && this.level[i] < this.level[index] 
-                    && this.count[i] > 0) {
-                    this.count[i]--;
+                // change subUpgrade cost for next purches //
+                // this.cost[index] = this.baseCost[index] * 1.1 * this.count[index]; // check your brain
+                
+                display.updateScore();
                 }
-            };
-
-            // change subUpgrade cost for next purches
-            // this.cost[index] = this.baseCost[index] * 1.1 * this.count[index]; // check your brain
-            
-            display.updateScore();
         }
     }
 };
