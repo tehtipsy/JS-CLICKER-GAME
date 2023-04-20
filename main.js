@@ -100,12 +100,39 @@ var subUpgrades = {
         }
     },
 
+    getSubUpgradesInStock: function() {
+        var subUpgradesInStock = 0;
+        for (i = 0; i < subUpgrades.name.length; i++) { // fix this
+            subUpgradesInStock += this.count[i] 
+        }
+        return subUpgradesInStock;
+    },
+
     purchseSubUpgrade: function(index) {
         if (game.score >= this.cost[index]
             && upgrades.count[this.parentUpgradeIndex[index]] 
             > this.count[index]
             ) {
-                
+            
+            // subUpgradesInStock = this.getSubUpgradesInStock();
+            subUpgradesInStock = this.getSubUpgradesInStock(index); // change func to filter by level and parentIndex
+            alert(subUpgradesInStock);
+
+            // function getSubUpgradesInStock() {
+            // var subUpgradesInStock = 0;
+            // for (i = 0; i < subUpgrades.name.length; i++) { // fix this
+            //     this.count[i] += subUpgradesInStock
+            // }
+            // return subUpgradesInStock;
+            // }
+            // for (i = 0; i < subUpgrades.name.length; i++) { // fix this
+            //     if (this.parentUpgradeIndex[i] === this.parentUpgradeIndex[index]
+            //         && this.level[i] > this.level[index]
+            //         && this.count[i] > upgrades.count[this.parentUpgradeIndex[index]]) {
+            //             subUpgradesInStock += this.count[i]
+            //     } 
+            //     return subUpgradesInStock
+            // };
             // check if there are higher level subUpgreades "in stock"
             // if (this.count[index] === 0) {
             //     for (i = 0; i < subUpgrades.name.length; i++) { // fix this
