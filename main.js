@@ -31,7 +31,7 @@ var game = {
         this.score += amount;
         this.totalScore += amount;
         gameResource.count[0]++; // add to fossil fuel counter
-        game.totalFossilFuel++; // add to fossil fuel counter
+        this.totalFossilFuel++; // add to fossil fuel counter
         display.updateScore();
     },
 
@@ -65,7 +65,7 @@ var game = {
        return pollutionPerSecond
     },    
     
-    getFossilFuelsPerSecond: function() {
+    getFossilFuelsPerSecond: function() { // add check for resource type
         var fossilFuelsPerSecond = 0;
         for (i = 0; i < upgrades.name.length; i++) {
             fossilFuelsPerSecond += upgrades.resourceOutput[i] * upgrades.count[i];
@@ -101,7 +101,7 @@ var gameResource = {
                 ResourcePerSecond += 0.01 
                 * upgrades.resourceOutput[subUpgrades.parentUpgradeIndex[i]] 
                 * subUpgrades.count[i] 
-                * subUpgrades.level[i] 
+                * subUpgrades.level[i]
             }
         } return ResourcePerSecond
     },
@@ -207,6 +207,9 @@ var display = {
         document.getElementById("totaltrees").innerHTML = Math.ceil(gameResource.count[0]);
         document.getElementById("totalcoal").innerHTML = Math.ceil(gameResource.count[1]);
         document.getElementById("totalenergy").innerHTML = Math.ceil(gameResource.count[2]);
+        document.getElementById("woodpersec").innerHTML = Math.ceil(gameResource.countResource(0));
+        document.getElementById("coalpersec").innerHTML = Math.ceil(gameResource.countResource(1));
+        document.getElementById("energypersec").innerHTML = Math.ceil(gameResource.countResource(2));
         // upgrade cost //
         document.getElementById("lumberjack").innerHTML = Math.ceil(upgrades.cost[0]);
         document.getElementById("coalmine").innerHTML = Math.ceil(upgrades.cost[1]);
