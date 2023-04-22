@@ -1,21 +1,22 @@
-// // upgarde types:
-// // 1. Lumberjack
-// // 1.1 Jacksaw
-// // 1.2 Power Saw
-// // 1.3 heavy logging machine
-// // 2. Coal Mine
-// // 2.1 More Miners
-// // 3. Power Plants
-// // 3.1 More Power
+// // try to make profit without destroing the earth with pollution.
+// // too much pollution makes the planet inhospitable to the population.
+// // the goal of the game is to get the space fairing age.
 
-// // pollution system:
+// // Pollution System:
 // // pnealty for power plants and coal mine,
 // // "polluting upgrades", that subtarctes from the "ozone layer".
 
-// // fuel system:
+// // Resources System:
+// // Resources are gathered to unlock technolegies and items (Upgrades). 
+// // some resources can be used to create diffrent resources.
+// // They can also be combined with other resources and technologies
+// // to unlock new resources and technologies.
+
+// // Fuel System:
 // // fuels are used in power plants to create stored energy and income.
 
-// // energy system:
+// // Energy System:
+// // HUMAN LABOR + UPKEEP + FUEL = PROGRESS
 // // ???
 // // PROFIT
 
@@ -84,14 +85,22 @@ var game = {
         } return fossilFuelsPerSecond
     },
 
-    // fossilFuelsUsagePerSecond ??? //
+    getUpkeepCostPerSecond: function() {
+        var upkeepCost = 0
+        for (i = 0; i < upgrades.name.length; i++) {
+            upkeepCost = 0.01 
+            * upgrades.baseCost[i] 
+            * upgrades.count[i]
+        }
+        return upkeepCost
+    },
 };
 
 var gameResource = {
-    name: ["Wood", "Coal", "Energy"], // Trees, Coal, Natural Gas, Energy, Water, ... Money??// 
-    resourceType: ["Fossil Fuel", "Fossil Fuel", "Stored Energy"], // Fossil Fuel, Stored Energy, Clean Fuel, ..., ... //
-    mesureUnit: ["Tons", "Tons", "KVAs"], // $$$, Tons, KVA, ..., ... //
-    count: [0, 0, 0],
+    name: ["Wood", "Coal", "Energy", "Population", "Food"], // Trees, Coal, Natural Gas, Energy, Water, ... Money??// 
+    resourceType: ["Fossil Fuel", "Fossil Fuel", "Stored Energy", "People"], // Fossil Fuel, Stored Energy, Clean Fuel, ..., ... //
+    mesureUnit: ["Tons", "Tons", "KVAs", "People", "Tons"], // $$$, Tons, KVA, ..., ... //
+    count: [0, 0, 0, 0, 0],
 
     countResource: function(index) { // use the resource index I guess
         var ResourcePerSecond = 0;
@@ -119,10 +128,10 @@ var upgrades = {
     pollutionOut: [0, 1, 100],
     count: [0, 0, 0],
     cost: [0, 0, 0], // calculate using baseCost * count(!=0) * 1.1
-    maxPossible: [100000, 10000, 1000],
+    // maxPossible: [100000, 10000, 1000],
     resourceOutput: [10, 100, 100],
-    fuelType: ["no fuel", "no fuel", "Fossil Fuel"],
     outputType: ["Wood", "Coal", "Energy"],
+    fuelType: ["Population", "Population", "Fossil Fuel"],
     // image: [],
 
     upgradeCost: function() {
@@ -212,6 +221,7 @@ var display = {
         document.getElementById("totaltrees").innerHTML = Math.ceil(gameResource.count[0]);
         document.getElementById("totalcoal").innerHTML = Math.ceil(gameResource.count[1]);
         document.getElementById("totalenergy").innerHTML = Math.ceil(gameResource.count[2]);
+        document.getElementById("population").innerHTML = Math.ceil(gameResource.count[3]);
         document.getElementById("woodpersec").innerHTML = Math.ceil(gameResource.countResource(0));
         document.getElementById("coalpersec").innerHTML = Math.ceil(gameResource.countResource(1));
         document.getElementById("energypersec").innerHTML = Math.ceil(gameResource.countResource(2));
@@ -255,6 +265,8 @@ setInterval(function() { // Income Cycle
     gameResource.count[0] += gameResource.countResource(0); // Wood //
     gameResource.count[1] += gameResource.countResource(1); // Coal //
     gameResource.count[2] += gameResource.countResource(2); // Energy //
+    gameResource.count[3]++; // Population //
+    game.score -= game.getUpkeepCostPerSecond();
     display.updateScore();
 }, 1000);
 
