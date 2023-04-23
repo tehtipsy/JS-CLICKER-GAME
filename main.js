@@ -20,6 +20,16 @@
 // // ???
 // // PROFIT
 
+const buttons = document.querySelectorAll('button');
+
+buttons.forEach(button => {
+  button.addEventListener('click', () => {
+    // add check if upgrade or sub upgrade was purchsed 
+    game.totalClicks++;
+    display.updateScore();
+  });
+});
+
 var game = {
     score: 0,
     totalScore: 0,
@@ -121,7 +131,7 @@ var gameResource = {
     },
 
     countAllResources: function() {
-        for (let i = 0; i < this.name.length; i++) { // DA FUQ
+        for (let i = 0; i < this.name.length; i++) {
             // run countResource() for each Resource and add to Resource count
             this.count[i] += this.countResource(i);
         }
@@ -220,7 +230,7 @@ var display = {
         document.getElementById("pollutionpersec").innerHTML = game.getPollutionPerSecond();
         document.getElementById("fossilfuelpersec").innerHTML = game.getFossilFuelsPerSecond();        
         // game counters //
-        document.getElementById("totalclicks").innerHTML = game.score; // count clicks on base and upgrade buttons
+        document.getElementById("totalclicks").innerHTML = game.totalClicks; // count clicks on base and upgrade buttons
         document.getElementById("score").innerHTML = game.score;
         document.getElementById("pollution").innerHTML = Math.ceil(game.totalPollution);
         document.getElementById("totalfossilfuel").innerHTML = Math.ceil(game.totalFossilFuel);
@@ -269,11 +279,7 @@ setInterval(function() { // Income Cycle
     game.totalPollution += game.getPollutionPerSecond();
     game.totalFossilFuel += game.getFossilFuelsPerSecond();
     // totalResourceCount //
-    gameResource.countAllResources(); // FIGURE THIS OUT
-    // gameResource.count[0] += gameResource.countResource(0); // Wood //
-    // gameResource.count[1] += gameResource.countResource(1); // Coal //
-    // gameResource.count[2] += gameResource.countResource(2); // Energy //
-    // gameResource.count[3]++; // Population //
+    gameResource.countAllResources();
     // game.score -= game.getUpkeepCostPerSecond();
     // console.log(gameResource.count[1])
     display.updateScore();
