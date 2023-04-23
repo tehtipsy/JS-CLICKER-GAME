@@ -121,7 +121,7 @@ var gameResource = {
     },
 
     countAllResources: function() {
-        for (i = 0; i < this.name.length; i++) { // DA FUQ
+        for (let i = 0; i < this.name.length; i++) { // DA FUQ
             // run countResource() for each Resource and add to Resource count
             this.count[i] += this.countResource(i);
         }
@@ -269,10 +269,10 @@ setInterval(function() { // Income Cycle
     game.totalPollution += game.getPollutionPerSecond();
     game.totalFossilFuel += game.getFossilFuelsPerSecond();
     // totalResourceCount //
-    // gameResource.countAllResources(); // FIGURE THIS OUT
-    gameResource.count[0] += gameResource.countResource(0); // Wood //
-    gameResource.count[1] += gameResource.countResource(1); // Coal //
-    gameResource.count[2] += gameResource.countResource(2); // Energy //
+    gameResource.countAllResources(); // FIGURE THIS OUT
+    // gameResource.count[0] += gameResource.countResource(0); // Wood //
+    // gameResource.count[1] += gameResource.countResource(1); // Coal //
+    // gameResource.count[2] += gameResource.countResource(2); // Energy //
     // gameResource.count[3]++; // Population //
     // game.score -= game.getUpkeepCostPerSecond();
     // console.log(gameResource.count[1])
