@@ -1,9 +1,9 @@
 // // try to make profit without destroing the earth with pollution.
 // // too much pollution makes the planet inhospitable to the population.
-// // the goal of the game is to get the space fairing age.
+// // the goal of the game is to get to the space fairing age.
 
 // // Pollution System:
-// // pnealty for power plants and coal mine,
+// // pnealty for power plants and coal mines,
 // // "polluting upgrades", that subtarctes from the "ozone layer".
 
 // // Resources System:
@@ -31,8 +31,8 @@ var game = {
     addToScore: function(amount) { // change to count clicks and then calc profit, add check for each button //
         this.score += amount;
         this.totalScore += amount;
-        gameResource.count[0]++; // add to fossil fuel counter
-        this.totalFossilFuel++; // add to fossil fuel counter
+        // gameResource.count[0]++; // add to wood counter
+        // this.totalFossilFuel++; // add to fossil fuel counter
         display.updateScore();
     },
 
@@ -98,7 +98,7 @@ var game = {
 
 var gameResource = {
     name: ["Wood", "Coal", "Energy", "Population", "Food"], // Trees, Coal, Natural Gas, Energy, Water, ... Money??// 
-    resourceType: ["Fossil Fuel", "Fossil Fuel", "Stored Energy", "People"], // Fossil Fuel, Stored Energy, Clean Fuel, ..., ... //
+    resourceType: ["Fossil Fuel", "Fossil Fuel", "Stored Energy", "People", "Food"], // Fossil Fuel, Stored Energy, Clean Fuel, ..., ... //
     mesureUnit: ["Tons", "Tons", "KVAs", "People", "Tons"], // $$$, Tons, KVA, ..., ... //
     count: [0, 0, 0, 0, 0],
 
@@ -119,6 +119,13 @@ var gameResource = {
             }
         } return ResourcePerSecond
     },
+
+    countAllResources: function() {
+        for (i = 0; i < this.name.length; i++) { // DA FUQ
+            // run countResource() for each Resource and add to Resource count
+            this.count[i] += this.countResource(i);
+        }
+    },
 };
 
 var upgrades = {
@@ -130,7 +137,7 @@ var upgrades = {
     cost: [0, 0, 0], // calculate using baseCost * count(!=0) * 1.1
     // maxPossible: [100000, 10000, 1000],
     resourceOutput: [10, 100, 100],
-    outputType: ["Wood", "Coal", "Energy"],
+    outputType: ["Wood", "Coal", "Energy"],  // ["Wood", "Coal", "Energy"],
     fuelType: ["Population", "Population", "Fossil Fuel"],
     // image: [],
 
@@ -262,11 +269,13 @@ setInterval(function() { // Income Cycle
     game.totalPollution += game.getPollutionPerSecond();
     game.totalFossilFuel += game.getFossilFuelsPerSecond();
     // totalResourceCount //
+    // gameResource.countAllResources(); // FIGURE THIS OUT
     gameResource.count[0] += gameResource.countResource(0); // Wood //
     gameResource.count[1] += gameResource.countResource(1); // Coal //
     gameResource.count[2] += gameResource.countResource(2); // Energy //
-    gameResource.count[3]++; // Population //
-    game.score -= game.getUpkeepCostPerSecond();
+    // gameResource.count[3]++; // Population //
+    // game.score -= game.getUpkeepCostPerSecond();
+    // console.log(gameResource.count[1])
     display.updateScore();
 }, 1000);
 
