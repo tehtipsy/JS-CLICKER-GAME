@@ -150,6 +150,7 @@ var gameResource = {
 
 var upgrades = {
     name: ["Lumberjack", "Coal Mine", "Power Plant"], // Offshore Gas Rig, Hydroelectric Power Plant, Solar Power Plant //
+    level: [ 1, 2, 3],
     baseCost: [2500, 10000, 200000], // fix demo costs
     income: [1000, 50000, 1000000],
     pollutionOut: [0, 1, 100],
@@ -158,7 +159,7 @@ var upgrades = {
     // maxPossible: [100000, 10000, 1000],
     resourceOutput: [10, 100, 1000],
     outputType: ["Wood", "Coal", "Energy"],  // ["Wood", "Coal", "Energy"],
-    fuelType: ["Population", "Population", "Fossil Fuel"],
+    fuelType: ["Population", "Wood", "Coal"],
     // image: [],
 
     upgradeCost: function() {
@@ -238,6 +239,7 @@ var display = {
         // bonuses per sec //
         document.getElementById("scorepersec").innerHTML = game.getScorePerSecond();
         document.getElementById("upkeeppersec").innerHTML = game.getUpkeepCostPerSecond();
+        document.getElementById("woodupkeeppersec").innerHTML = game.getUpkeepCostPerSecond();
         document.getElementById("pollutionpersec").innerHTML = game.getPollutionPerSecond();
         document.getElementById("fossilfuelpersec").innerHTML = game.getFossilFuelsPerSecond();        
         // game counters //
