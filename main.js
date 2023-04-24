@@ -1,3 +1,5 @@
+// // KARDASHEV SCALE CLICKER GAME // //
+
 // // try to make profit without destroing the earth with pollution.
 // // too much pollution makes the planet inhospitable to the population.
 // // the goal of the game is to get to the space fairing age.
@@ -100,18 +102,17 @@ var game = {
         // add resource.count[i] >= upkeepcost in getScorePerSecond() ???
         var upkeepCost = 0
         for (let i = 0; i < upgrades.name.length; i++) {
-            upkeepCost = 0.01 
+            upkeepCost += 0.1
             * upgrades.resourceOutput[i] 
             * upgrades.count[i]
         }
         for (let i = 0; i < subUpgrades.name.length; i++) {
-            upkeepCost = 0.01
+            upkeepCost += 0.1 
             * upgrades.resourceOutput[subUpgrades.parentUpgradeIndex[i]] 
             * subUpgrades.count[i]
             * subUpgrades.bonusToIncome[i]
             * subUpgrades.level[i]
-        }
-        return upkeepCost
+        } return upkeepCost
     },
 };
 
@@ -155,7 +156,7 @@ var upgrades = {
     count: [0, 0, 0],
     cost: [0, 0, 0], // calculate using baseCost * count(!=0) * 1.1
     // maxPossible: [100000, 10000, 1000],
-    resourceOutput: [10, 100, 100],
+    resourceOutput: [10, 100, 1000],
     outputType: ["Wood", "Coal", "Energy"],  // ["Wood", "Coal", "Energy"],
     fuelType: ["Population", "Population", "Fossil Fuel"],
     // image: [],
@@ -236,6 +237,7 @@ var display = {
     updateScore: function() {
         // bonuses per sec //
         document.getElementById("scorepersec").innerHTML = game.getScorePerSecond();
+        document.getElementById("upkeeppersec").innerHTML = game.getUpkeepCostPerSecond();
         document.getElementById("pollutionpersec").innerHTML = game.getPollutionPerSecond();
         document.getElementById("fossilfuelpersec").innerHTML = game.getFossilFuelsPerSecond();        
         // game counters //
