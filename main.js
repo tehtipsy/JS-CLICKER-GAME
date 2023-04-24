@@ -23,8 +23,7 @@
 const buttons = document.querySelectorAll('button');
 
 buttons.forEach(button => {
-  button.addEventListener('click', () => {
-    // add check if upgrade or sub upgrade was purchsed 
+  button.addEventListener('click', () => { // create a custom event in purchse and click
     game.totalClicks++;
     display.updateScore();
   });
@@ -81,7 +80,8 @@ var game = {
         for (i = 0; i < upgrades.name.length; i++) {
             if (upgrades.outputType[i] == "Wood" 
             || upgrades.outputType[i] == "Coal") { // fix this shit //
-                fossilFuelsPerSecond += upgrades.resourceOutput[i] * upgrades.count[i];
+                fossilFuelsPerSecond += upgrades.resourceOutput[i] 
+                * upgrades.count[i];
             }
         }        
         for (i = 0; i < subUpgrades.name.length; i++) {
@@ -96,11 +96,20 @@ var game = {
     },
 
     getUpkeepCostPerSecond: function() {
+        // count for each resource. 
+        // add resource.count[i] >= upkeepcost in getScorePerSecond() ???
         var upkeepCost = 0
-        for (i = 0; i < upgrades.name.length; i++) {
+        for (let i = 0; i < upgrades.name.length; i++) {
             upkeepCost = 0.01 
-            * upgrades.baseCost[i] 
+            * upgrades.resourceOutput[i] 
             * upgrades.count[i]
+        }
+        for (let i = 0; i < subUpgrades.name.length; i++) {
+            upkeepCost = 0.01
+            * upgrades.resourceOutput[subUpgrades.parentUpgradeIndex[i]] 
+            * subUpgrades.count[i]
+            * subUpgrades.bonusToIncome[i]
+            * subUpgrades.level[i]
         }
         return upkeepCost
     },
