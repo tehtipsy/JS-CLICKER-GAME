@@ -97,23 +97,33 @@ var game = {
         } return fossilFuelsPerSecond
     },
 
-    getUpkeepCostPerSecond: function() {
+    getUpkeepCostPerSecond: function(resourceIndex) {
         // count for each resource. 
         // add resource.count[i] >= upkeepcost in getScorePerSecond() ???
         var upkeepCost = 0
         for (let i = 0; i < upgrades.name.length; i++) {
-            upkeepCost += 0.1
-            * upgrades.resourceOutput[i] 
-            * upgrades.count[i]
+            if (gameResource.name[resourceIndex] == upgrades.fuelType[i]){
+                upkeepCost += 0.1
+                * upgrades.resourceOutput[i] 
+                * upgrades.count[i]
+            }
         }
         for (let i = 0; i < subUpgrades.name.length; i++) {
-            upkeepCost += 0.1 
-            * upgrades.resourceOutput[subUpgrades.parentUpgradeIndex[i]] 
-            * subUpgrades.count[i]
-            * subUpgrades.bonusToIncome[i]
-            * subUpgrades.level[i]
+            if (gameResource.name[resourceIndex] == upgrades.fuelType[subUpgrades.parentUpgradeIndex[i]]){
+                upkeepCost += 0.1 
+                * upgrades.resourceOutput[subUpgrades.parentUpgradeIndex[i]] 
+                * subUpgrades.count[i]
+                * subUpgrades.bonusToIncome[i]
+                * subUpgrades.level[i]
+            }
         } return upkeepCost
     },
+
+    subtractUpkeepForAllResources: function() {
+        for (let i = 0; i < gameResource.name.length; i++) {
+            gameResource.count[i] -= this.getUpkeepCostPerSecond(i);
+        }
+    }
 };
 
 var gameResource = {
@@ -238,8 +248,8 @@ var display = {
     updateScore: function() {
         // bonuses per sec //
         document.getElementById("scorepersec").innerHTML = game.getScorePerSecond();
-        document.getElementById("upkeeppersec").innerHTML = game.getUpkeepCostPerSecond();
-        document.getElementById("woodupkeeppersec").innerHTML = game.getUpkeepCostPerSecond();
+        // document.getElementById("upkeeppersec").innerHTML = game.getUpkeepCostPerSecond();
+        // document.getElementById("woodupkeeppersec").innerHTML = game.getUpkeepCostPerSecond(0);
         document.getElementById("pollutionpersec").innerHTML = game.getPollutionPerSecond();
         document.getElementById("fossilfuelpersec").innerHTML = game.getFossilFuelsPerSecond();        
         // game counters //
@@ -293,7 +303,9 @@ setInterval(function() { // Income Cycle
     game.totalFossilFuel += game.getFossilFuelsPerSecond();
     // totalResourceCount //
     gameResource.countAllResources();
-    // game.score -= game.getUpkeepCostPerSecond();
+    game.subtractUpkeepForAllResources();
+    gameResource.count[3]+=10; // increase population
+    // game.score -= game.subtractUpkeepForAllResources();
     // console.log(gameResource.count[1])
     display.updateScore();
 }, 1000);
