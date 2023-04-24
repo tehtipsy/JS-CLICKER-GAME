@@ -49,8 +49,12 @@ var game = {
 
     getScorePerSecond: function() {
         var scorePerSecond = 0;
-        for (i = 0; i < upgrades.name.length; i++) {
-            scorePerSecond += upgrades.income[i] * upgrades.count[i];
+        for (i = 0; i < upgrades.name.length; i++) { 
+            if (gameResource.count[gameResource.name.indexOf(upgrades.fuelType[i])] > 0) { // this.getUpkeepCostPerSecond(gameResource.name.indexOf(upgrades.fuelType[i])) ) {
+
+                    console.log(upgrades.fuelType[i])
+                    scorePerSecond += upgrades.income[i] * upgrades.count[i];
+            }
         };
         for (i = 0; i < subUpgrades.name.length; i++) {
             scorePerSecond += 0.01
@@ -98,7 +102,6 @@ var game = {
     },
 
     getUpkeepCostPerSecond: function(resourceIndex) {
-        // count for each resource. 
         // add resource.count[i] >= upkeepcost in getScorePerSecond() ???
         var upkeepCost = 0
         for (let i = 0; i < upgrades.name.length; i++) {
@@ -121,7 +124,9 @@ var game = {
 
     subtractUpkeepForAllResources: function() {
         for (let i = 0; i < gameResource.name.length; i++) {
-            gameResource.count[i] -= this.getUpkeepCostPerSecond(i);
+            if (gameResource.count[i] > 0) { // = this.getUpkeepCostPerSecond(i)) {
+                gameResource.count[i] -= this.getUpkeepCostPerSecond(i);
+            }
         }
     }
 };
@@ -304,7 +309,7 @@ setInterval(function() { // Income Cycle
     // totalResourceCount //
     gameResource.countAllResources();
     game.subtractUpkeepForAllResources();
-    gameResource.count[3]+=10; // increase population
+    gameResource.count[3]++; // increase population
     // game.score -= game.subtractUpkeepForAllResources();
     // console.log(gameResource.count[1])
     display.updateScore();
