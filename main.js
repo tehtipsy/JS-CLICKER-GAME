@@ -51,19 +51,15 @@ var game = {
         var scorePerSecond = 0;
         for (i = 0; i < upgrades.name.length; i++) { 
             if (gameResource.count[gameResource.name.indexOf(upgrades.fuelType[i])] > 0) { // this.getUpkeepCostPerSecond(gameResource.name.indexOf(upgrades.fuelType[i])) ) {
-
-                    console.log(upgrades.fuelType[i])
-                    scorePerSecond += upgrades.income[i] * upgrades.count[i];
+                // console.log(upgrades.fuelType[i])
+                scorePerSecond += upgrades.getUpgradesIncome(i);
             }
         };
         for (i = 0; i < subUpgrades.name.length; i++) {
-            scorePerSecond += 0.01
-                * upgrades.income[subUpgrades.parentUpgradeIndex[i]] 
-                * subUpgrades.bonusToIncome[i] 
-                * subUpgrades.count[i] 
-                * subUpgrades.level[i];
-        }
-        return scorePerSecond
+            if (gameResource.count[gameResource.name.indexOf(upgrades.fuelType[subUpgrades.parentUpgradeIndex[i]])] > 0) {
+            scorePerSecond += 0.01 * subUpgrades.getSubUpgradesIncome(i);
+            }
+        } return scorePerSecond
     },
 
     getPollutionPerSecond: function() {
@@ -86,17 +82,13 @@ var game = {
         for (i = 0; i < upgrades.name.length; i++) {
             if (upgrades.outputType[i] == "Wood" 
             || upgrades.outputType[i] == "Coal") { // fix this shit //
-                fossilFuelsPerSecond += upgrades.resourceOutput[i] 
-                * upgrades.count[i];
+                fossilFuelsPerSecond += gameResource.countResourceForUpgrades(i)
             }
         }        
         for (i = 0; i < subUpgrades.name.length; i++) {
             if (upgrades.outputType[subUpgrades.parentUpgradeIndex[i]] == "Wood" 
             || upgrades.outputType[subUpgrades.parentUpgradeIndex[i]] == "Coal") { // fix this shit //
-            fossilFuelsPerSecond += 0.1 *
-            upgrades.resourceOutput[subUpgrades.parentUpgradeIndex[i]] 
-            * subUpgrades.count[i] 
-            * subUpgrades.level[i]
+            fossilFuelsPerSecond += 0.1 * gameResource.countResourceForSubUpgrades(i)
             }
         } return fossilFuelsPerSecond
     },
@@ -107,24 +99,21 @@ var game = {
         for (let i = 0; i < upgrades.name.length; i++) {
             if (gameResource.name[resourceIndex] == upgrades.fuelType[i]){
                 upkeepCost += 0.1
-                * upgrades.resourceOutput[i] 
-                * upgrades.count[i]
+                * gameResource.countResourceForUpgrades(i)
             }
         }
         for (let i = 0; i < subUpgrades.name.length; i++) {
             if (gameResource.name[resourceIndex] == upgrades.fuelType[subUpgrades.parentUpgradeIndex[i]]){
                 upkeepCost += 0.1 
-                * upgrades.resourceOutput[subUpgrades.parentUpgradeIndex[i]] 
-                * subUpgrades.count[i]
+                * gameResource.countResourceForSubUpgrades(i)
                 * subUpgrades.bonusToIncome[i]
-                * subUpgrades.level[i]
             }
         } return upkeepCost
     },
 
     subtractUpkeepForAllResources: function() {
         for (let i = 0; i < gameResource.name.length; i++) {
-            if (gameResource.count[i] > 0) { // = this.getUpkeepCostPerSecond(i)) {
+            if (gameResource.count[i] > 0) {
                 gameResource.count[i] -= this.getUpkeepCostPerSecond(i);
             }
         }
@@ -132,33 +121,45 @@ var game = {
 };
 
 var gameResource = {
-    name: ["Wood", "Coal", "Energy", "Population", "Food"], // Trees, Coal, Natural Gas, Energy, Water, ... Money??// 
-    resourceType: ["Fossil Fuel", "Fossil Fuel", "Stored Energy", "People", "Food"], // Fossil Fuel, Stored Energy, Clean Fuel, ..., ... //
-    mesureUnit: ["Tons", "Tons", "KVAs", "People", "Tons"], // $$$, Tons, KVA, ..., ... //
+    name: ["Population", "Wood", "Coal", "Energy", "Food"], // Trees, Coal, Natural Gas, Energy, Water, ... Money??// 
+    resourceType: ["People", "Fossil Fuel", "Fossil Fuel", "Stored Energy", "Food"], // Fossil Fuel, Stored Energy, Clean Fuel, ..., ... //
+    mesureUnit: ["People", "Tons", "Tons", "KVAs", "Tons"], // $$$, Tons, KVA, ..., ... //
     count: [0, 0, 0, 0, 0],
 
-    countResource: function(index) { // use the resource index I guess
-        var ResourcePerSecond = 0;
+    countResourceForUpgrades: function(upgradeIndex) {
+        let ResourceCount = upgrades.resourceOutput[upgradeIndex] 
+        * upgrades.count[upgradeIndex];
+        return ResourceCount
+    },
+
+    countResourceForSubUpgrades: function(subUpgradeIndex) {
+        let ResourceCount = upgrades.resourceOutput[subUpgrades.parentUpgradeIndex[subUpgradeIndex]] 
+        * subUpgrades.count[subUpgradeIndex] 
+        * subUpgrades.level[subUpgradeIndex]
+        return ResourceCount
+    } ,
+
+    countResourceForAll: function(index) { // use the resource index I guess
+        var totalResourceCount = 0;
         for (i = 0; i < upgrades.name.length; i++) {
-            if (this.name[index] == upgrades.outputType[i]) {
-                ResourcePerSecond += upgrades.resourceOutput[i] 
-                * upgrades.count[i] 
+            if (this.name[index] == upgrades.outputType[i]){
+                // && this.count[index-1] >= 0.1 * this.count[index]
+                // && this.count[index-1] >= 0) { // add fuel consumption
+                totalResourceCount += this.countResourceForUpgrades(i)
             } 
         }
         for (i = 0; i < subUpgrades.name.length; i++) {
             if (this.name[index] == upgrades.outputType[subUpgrades.parentUpgradeIndex[i]]) {
-                ResourcePerSecond += 0.01 
-                * upgrades.resourceOutput[subUpgrades.parentUpgradeIndex[i]] 
-                * subUpgrades.count[i] 
-                * subUpgrades.level[i]
+                // && this.count[index-1] >= 0.1 * this.count[index]
+                // && this.count[index-1] >= 0) { // add fuel consumption
+                totalResourceCount += 0.01 * this.countResourceForSubUpgrades(i)
             }
-        } return ResourcePerSecond
+        } return totalResourceCount
     },
 
     countAllResources: function() {
         for (let i = 0; i < this.name.length; i++) {
-            // run countResource() for each Resource and add to Resource count
-            this.count[i] += this.countResource(i);
+            this.count[i] += this.countResourceForAll(i);
         }
     },
 };
@@ -191,7 +192,12 @@ var upgrades = {
             // this.cost[index] = this.cost[index] * 1.1 * this.count[index]; // better diff curve?
             display.updateScore();
         }
-    }
+    },
+
+    getUpgradesIncome: function(i) {
+        let totalIncome = this.count[i] * this.income[i]
+        return totalIncome
+    },
 };
 
 var subUpgrades = {
@@ -246,7 +252,15 @@ var subUpgrades = {
             display.updateScore();
             }
         }
-    }
+    },
+
+    getSubUpgradesIncome: function(i) {
+        let subUpgradesIncome = upgrades.income[subUpgrades.parentUpgradeIndex[i]] 
+        * subUpgrades.bonusToIncome[i] 
+        * subUpgrades.count[i] 
+        * subUpgrades.level[i]
+        return subUpgradesIncome
+    },
 };
 
 var display = {
@@ -263,13 +277,13 @@ var display = {
         document.getElementById("pollution").innerHTML = Math.ceil(game.totalPollution);
         document.getElementById("totalfossilfuel").innerHTML = Math.ceil(game.totalFossilFuel);
         // resource count //
-        document.getElementById("totaltrees").innerHTML = Math.ceil(gameResource.count[0]);
-        document.getElementById("totalcoal").innerHTML = Math.ceil(gameResource.count[1]);
-        document.getElementById("totalenergy").innerHTML = Math.ceil(gameResource.count[2]);
-        document.getElementById("population").innerHTML = Math.ceil(gameResource.count[3]);
-        document.getElementById("woodpersec").innerHTML = Math.ceil(gameResource.countResource(0));
-        document.getElementById("coalpersec").innerHTML = Math.ceil(gameResource.countResource(1));
-        document.getElementById("energypersec").innerHTML = Math.ceil(gameResource.countResource(2));
+        document.getElementById("population").innerHTML = Math.ceil(gameResource.count[0]);
+        document.getElementById("totaltrees").innerHTML = Math.ceil(gameResource.count[1]);
+        document.getElementById("totalcoal").innerHTML = Math.ceil(gameResource.count[2]);
+        document.getElementById("totalenergy").innerHTML = Math.ceil(gameResource.count[3]);
+        document.getElementById("woodpersec").innerHTML = Math.ceil(gameResource.countResourceForAll(1));
+        document.getElementById("coalpersec").innerHTML = Math.ceil(gameResource.countResourceForAll(2));
+        document.getElementById("energypersec").innerHTML = Math.ceil(gameResource.countResourceForAll(3));
         // upgrade cost //
         document.getElementById("lumberjack").innerHTML = Math.ceil(upgrades.cost[0]);
         document.getElementById("coalmine").innerHTML = Math.ceil(upgrades.cost[1]);
@@ -309,7 +323,7 @@ setInterval(function() { // Income Cycle
     // totalResourceCount //
     gameResource.countAllResources();
     game.subtractUpkeepForAllResources();
-    gameResource.count[3]++; // increase population
+    gameResource.count[0]++; // increase population
     // game.score -= game.subtractUpkeepForAllResources();
     // console.log(gameResource.count[1])
     display.updateScore();
