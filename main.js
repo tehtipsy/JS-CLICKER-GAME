@@ -132,7 +132,7 @@ var gameResource = {
         * subUpgrades.count[subUpgradeIndex] 
         * subUpgrades.level[subUpgradeIndex]
         return ResourceCount
-    } ,
+    },
 
     countResourceForAll: function(index) { // use the resource index I guess
         var totalResourceCount = 0;
