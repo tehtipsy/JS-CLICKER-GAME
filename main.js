@@ -51,7 +51,6 @@ var game = {
         var scorePerSecond = 0;
         for (i = 0; i < upgrades.name.length; i++) { 
             if (gameResource.count[gameResource.name.indexOf(upgrades.fuelType[i])] > 0) { // this.getUpkeepCostPerSecond(gameResource.name.indexOf(upgrades.fuelType[i])) ) {
-                // console.log(upgrades.fuelType[i])
                 scorePerSecond += upgrades.getUpgradesIncome(i);
             }
         };
@@ -65,16 +64,12 @@ var game = {
     getPollutionPerSecond: function() {
         var pollutionPerSecond = 0;
         for (i = 0; i < upgrades.name.length; i++) {
-            pollutionPerSecond += upgrades.pollutionOut[i] * upgrades.count[i];
-        }        
+            pollutionPerSecond += upgrades.getUpgradePollution(i);
+        }
         for (i = 0; i < subUpgrades.name.length; i++) {
             pollutionPerSecond += 0.01 *
-            upgrades.pollutionOut[subUpgrades.parentUpgradeIndex[i]] 
-            * subUpgrades.count[i] 
-            * subUpgrades.level[i]
-            * subUpgrades.bonusToPollution[i];
-        }
-       return pollutionPerSecond
+            subUpgrades.getSubUpgradePollution(i);
+        } return pollutionPerSecond
     },    
     
     getFossilFuelsPerSecond: function() { // add check for resource type
@@ -178,7 +173,7 @@ var upgrades = {
     fuelType: ["Population", "Wood", "Coal"],
     // image: [],
 
-    upgradeCost: function() {
+    initUpgradeCost: function() {
         for (i = 0; i < this.name.length; i++) {
             this.cost[i] = this.baseCost[i];
         }
@@ -198,6 +193,11 @@ var upgrades = {
         let totalIncome = this.count[i] * this.income[i]
         return totalIncome
     },
+
+    getUpgradePollution: function(i) {
+        let totalPollution = this.count[i] * this.pollutionOut[i]
+        return totalPollution
+    },
 };
 
 var subUpgrades = {
@@ -209,7 +209,7 @@ var subUpgrades = {
     bonusToIncome: [1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1], // calc according to level
     bonusToPollution: [1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1], // calc according to level
 
-    subUpgradeCost: function() {
+    initSubUpgradeCost: function() {
         for(i = 0; i < subUpgrades.name.length; i++) {
             this.cost[i] = 0.1 
             * upgrades.baseCost[this.parentUpgradeIndex[i]] * this.level[i];
@@ -260,6 +260,14 @@ var subUpgrades = {
         * subUpgrades.count[i] 
         * subUpgrades.level[i]
         return subUpgradesIncome
+    },
+
+    getSubUpgradePollution: function(i) {
+        let totalPollution = this.count[i]
+        * upgrades.pollutionOut[this.parentUpgradeIndex[i]] 
+        * this.level[i]
+        * this.bonusToPollution[i]
+        return totalPollution
     },
 };
 
@@ -330,7 +338,7 @@ setInterval(function() { // Income Cycle
 }, 1000);
 
 window.onload = function() {
-    upgrades.upgradeCost();
-    subUpgrades.subUpgradeCost();
+    upgrades.initUpgradeCost();
+    subUpgrades.initSubUpgradeCost();
     display.updateScore();
 };
