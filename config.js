@@ -1,4 +1,4 @@
-const config = {
+export const config = {
     producers: [
 
         {
@@ -16,11 +16,16 @@ const config = {
                 },
             ],
             upkeepCosts: [
+                // {
+                //     currency: "money",
+                //     base: 250,
+                //     currencyGrowth: "1",
+                // },               
                 {
-                    currency: "money",
-                    base: 250,
-                    currencyGrowth: "1",
-                },                
+                    currency: "population",
+                    currencyGrowth: 1,
+                    base: 1,
+                }, 
             ],
             production: [
                 {
@@ -29,15 +34,13 @@ const config = {
                 },                  
                 {
                     currency: "money",
-                    base: 10000000000,
+                    base: 1,
                 },  
-                // pollution? population?
                 {
                     currency: "pollution",
                     base: 1,
                 },
             ],
-            // pollution ?
         },        
         
         {
@@ -111,26 +114,16 @@ const config = {
                     currency: "wood",
                     base: 1,
                 },  
-                // pollution? population?
                 {
                     currency: "pollution",
                     base: 100,
                 },
             ],
-            // pollution ?
         },
 
-
-        {
-            name: "Coal Plant",
-            purchaseCosts: [ "..." ],
-            // ...
-        },
-
-        // ...
 
     ]
 
 };
 
-export default config;
+// export default config;

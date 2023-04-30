@@ -1,4 +1,4 @@
-import config from "./config.js";
+import { config } from "./config.js";
 
 class Game {
     constructor() {
@@ -28,10 +28,10 @@ class Game {
     };
 
     updateProducer(producer) {
-        // const config = {}; // get config - ES6 import
+        // const config = config; // get config - ES6 import
         const success = this.consumeCosts(producer, config);
-        this.produce(producer, config, success);
-        this.producePollution(producer, config, success);
+        this.produce(producer, success, config);
+        this.producePollution(producer, success, config); // redundent ?
     };
 
     consumeCosts(producer, config) {
@@ -39,7 +39,7 @@ class Game {
         let numberSucseeded = 0
         config.producers[producer].upkeepCosts.forEach(resource => {
             if (this.resources[resource.currency] >= resource.base) {
-                this.resources[resource.currency] -= resource.base
+                this.resources[resource.currency] -= resource.base // move to diffrent function ?
                 numberSucseeded++
             }
         }); return numberSucseeded
@@ -93,9 +93,9 @@ class Game {
                 // document.getElementById("evenmorepower").innerHTML = ;
                 // document.getElementById("mostpower").innerHTML = ;
                 // // upgrade count //
-                // document.getElementById("lumberjackcount").innerHTML = ;
-                // document.getElementById("coalminecount").innerHTML = ;
-                // document.getElementById("powerplantcount").innerHTML = ;
+                document.getElementById("lumberjackcount").innerHTML = this.producers.lumberjack ;
+                document.getElementById("coalminecount").innerHTML = this.producers.coalMine;
+                document.getElementById("powerplantcount").innerHTML = this.producers.powerPlant;
                 // // subUpgrade count //
                 // document.getElementById("jacksawscount").innerHTML = ;
                 // document.getElementById("powersawscount").innerHTML = ;
@@ -110,7 +110,7 @@ class Game {
 
     stateUpdate() {
         this.updateAutoProduction();
-        // this.updateAllProducers(); // build function and config
+        this.updateAllProducers(); // build function and config
         // this.sellResouces(); // TBD
     };
 
