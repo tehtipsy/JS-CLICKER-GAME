@@ -12,7 +12,7 @@ class Game {
         };
         this.producers = {
             lumberjack: 0,
-            coalPlant: 0,
+            coalMine: 0,
             powerPlant: 0,
         };
     };
@@ -28,7 +28,7 @@ class Game {
     };
 
     updateProducer(producer) {
-        // const config = {}; // get config ES6 import
+        // const config = {}; // get config - ES6 import
         const success = this.consumeCosts(producer, config);
         this.produce(producer, config, success);
         this.producePollution(producer, config, success);
@@ -36,10 +36,13 @@ class Game {
 
     consumeCosts(producer, config) {
         // consume costs and return the number of "active producers"
-        // let numberSucseeded = 0
-        // config.producers[producer].upkeepCosts.forEach(resource => {
-        //     this.resources[resource.currency] -= 
-        // }); return numberSucseeded
+        let numberSucseeded = 0
+        config.producers[producer].upkeepCosts.forEach(resource => {
+            if (this.resources[resource.currency] >= resource.base) {
+                this.resources[resource.currency] -= resource.base
+                numberSucseeded++
+            }
+        }); return numberSucseeded
     };
 
     produce(producer, numberSucceeded, config) {
@@ -68,10 +71,10 @@ class Game {
                 // document.getElementById("totalfossilfuel").innerHTML = ;
                 // // resource count //
                 document.getElementById("population").innerHTML = this.resources.population;
-                // document.getElementById("pollution").innerHTML = ;
-                // document.getElementById("totaltrees").innerHTML = ;
-                // document.getElementById("totalcoal").innerHTML = ;
-                // document.getElementById("totalenergy").innerHTML = ;
+                document.getElementById("pollution").innerHTML = this.resources.pollution;
+                document.getElementById("totaltrees").innerHTML = this.resources.wood;
+                document.getElementById("totalcoal").innerHTML = this.resources.coal;
+                document.getElementById("totalenergy").innerHTML = this.resources.energy;
                 // document.getElementById("woodpersec").innerHTML = ;
                 // document.getElementById("coalpersec").innerHTML = ;
                 // document.getElementById("energypersec").innerHTML = ;
