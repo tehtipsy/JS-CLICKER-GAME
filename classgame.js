@@ -21,9 +21,15 @@ class Game {
         this.resources.population++;
     };
 
+    findProducerIndex(producer) {
+        const producerIndex = config.producers.findIndex(p => p.name === producer);
+        return producerIndex
+    }; 
+
     updateAllProducers() {
         Object.keys(this.producers).forEach(producer => {
-            const producerIndex = config.producers.findIndex(p => p.name === producer);
+            const producerIndex = this.findProducerIndex(producer);
+            // const producerIndex = config.producers.findIndex(p => p.name === producer);
             // this.produce(producer);
             // this.updateProducer(producer);
             // this.produce(producerIndex);
@@ -32,10 +38,10 @@ class Game {
     };
 
     updateProducer(producer) {
-        // const config = {}; // get config - ES6 import
         const success = this.consumeCosts(producer, config);
-        console.log(success)
         this.produce(producer, success, config);
+        // const config = {}; // get config - ES6 import
+        // console.log(success)
         // this.producePollution(producer, success, config); // redundent ?
     };
 
