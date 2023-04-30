@@ -108,8 +108,8 @@ export const config = {
             ],
             production: [
                 {
-                    currency: "wood",
-                    base: 1,
+                    currency: "energy",
+                    base: 100,
                 },  
                 {
                     currency: "pollution",

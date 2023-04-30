@@ -25,6 +25,8 @@ class Game {
         Object.keys(this.producers).forEach(producer => {
             const producerIndex = config.producers.findIndex(p => p.name === producer);
             // this.produce(producer);
+            // this.updateProducer(producer);
+            // this.produce(producerIndex);
             this.updateProducer(producerIndex);
         });
     };
@@ -37,15 +39,6 @@ class Game {
     };
 
     consumeCosts(producer, config) {
-        // console.log('producer:', producer);
-        // console.log('config.producers:', config.producers[0].upkeepCosts[0].base);
-        // const producerIndex = config.producers.findIndex(p => p.name === producer);
-        // if (producerIndex === -1) {
-        //     throw new Error(`Could not find producer '${producer}' in config`);
-        // }
-        // const producerConfig = config.producers[producerIndex];
-        // console.log(producerIndex);
-        // consume costs and return the number of "active producers"
         let numberSucceeded = 0
         config.producers[producer].upkeepCosts.forEach(resource => {
             if (this.resources[resource.currency] >= resource.base) {
@@ -56,9 +49,6 @@ class Game {
     };
 
     produce(producer, numberSucceeded, config) {
-        // console.log('producer:', producer);
-        // console.log('config.producers:', config.producers);
-        // const producerIndex = config.producers.findIndex(p => p.name === producer);
         config.producers[producer].production.forEach(resource => {
             this.resources[resource.currency] += resource.base * numberSucceeded;
         });
@@ -80,7 +70,7 @@ class Game {
         // document.getElementById("fossilfuelpersec").innerHTML = ;        
         // // game counters //
         // document.getElementById("totalclicks").innerHTML = ;
-        // document.getElementById("score").innerHTML = ;
+        document.getElementById("score").innerHTML = this.resources.money;
         // document.getElementById("totalfossilfuel").innerHTML = ;
         // // resource count //
         document.getElementById("population").innerHTML = this.resources.population;
