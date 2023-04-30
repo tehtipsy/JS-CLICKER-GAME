@@ -1,8 +1,7 @@
 export const config = {
     producers: [
-
         {
-            name: "Lumberjack",
+            name: "lumberjack",
             purchaseCosts: [
                 {
                     currency: "population",
@@ -16,11 +15,11 @@ export const config = {
                 },
             ],
             upkeepCosts: [
-                // {
-                //     currency: "money",
-                //     base: 250,
-                //     currencyGrowth: "1",
-                // },               
+                {
+                    currency: "money",
+                    base: 250,
+                    currencyGrowth: "1",
+                },               
                 {
                     currency: "population",
                     currencyGrowth: 1,
@@ -44,7 +43,7 @@ export const config = {
         },        
         
         {
-            name: "Coal Mine",
+            name: "coalMine",
             purchaseCosts: [
                 {
                     currency: "population",
@@ -74,17 +73,15 @@ export const config = {
                     currency: "coal",
                     base: 100,
                 },  
-                // pollution? population?
                 {
                     currency: "pollution",
                     base: 100,
                 },
             ],
-            // pollution ?
         },        
         
         {
-            name: "Power Plant",
+            name: "powerPlant",
             purchaseCosts: [
                 {
                     currency: "population",
@@ -120,9 +117,7 @@ export const config = {
                 },
             ],
         },
-
-
-    ]
+    ],
 
 };
 

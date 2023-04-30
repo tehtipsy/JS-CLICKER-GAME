@@ -23,29 +23,42 @@ class Game {
 
     updateAllProducers() {
         Object.keys(this.producers).forEach(producer => {
-            this.produce(producer);
+            const producerIndex = config.producers.findIndex(p => p.name === producer);
+            // this.produce(producer);
+            this.updateProducer(producerIndex);
         });
     };
 
     updateProducer(producer) {
-        // const config = config; // get config - ES6 import
+        // const config = {}; // get config - ES6 import
         const success = this.consumeCosts(producer, config);
         this.produce(producer, success, config);
-        this.producePollution(producer, success, config); // redundent ?
+        // this.producePollution(producer, success, config); // redundent ?
     };
 
     consumeCosts(producer, config) {
+        // console.log('producer:', producer);
+        // console.log('config.producers:', config.producers[0].upkeepCosts[0].base);
+        // const producerIndex = config.producers.findIndex(p => p.name === producer);
+        // if (producerIndex === -1) {
+        //     throw new Error(`Could not find producer '${producer}' in config`);
+        // }
+        // const producerConfig = config.producers[producerIndex];
+        // console.log(producerIndex);
         // consume costs and return the number of "active producers"
-        let numberSucseeded = 0
+        let numberSucceeded = 0
         config.producers[producer].upkeepCosts.forEach(resource => {
             if (this.resources[resource.currency] >= resource.base) {
                 this.resources[resource.currency] -= resource.base // move to diffrent function ?
-                numberSucseeded++
+                numberSucceeded++
             }
-        }); return numberSucseeded
+        }); return numberSucceeded
     };
 
     produce(producer, numberSucceeded, config) {
+        // console.log('producer:', producer);
+        // console.log('config.producers:', config.producers);
+        // const producerIndex = config.producers.findIndex(p => p.name === producer);
         config.producers[producer].production.forEach(resource => {
             this.resources[resource.currency] += resource.base * numberSucceeded;
         });
@@ -61,51 +74,51 @@ class Game {
 
     draw() {
         // draw ALL THE THINGS
-                // // bonuses per sec //
-                // document.getElementById("scorepersec").innerHTML = ;
-                // document.getElementById("pollutionpersec").innerHTML = ;
-                // document.getElementById("fossilfuelpersec").innerHTML = ;        
-                // // game counters //
-                // document.getElementById("totalclicks").innerHTML = ;
-                // document.getElementById("score").innerHTML = ;
-                // document.getElementById("totalfossilfuel").innerHTML = ;
-                // // resource count //
-                document.getElementById("population").innerHTML = this.resources.population;
-                document.getElementById("pollution").innerHTML = this.resources.pollution;
-                document.getElementById("totaltrees").innerHTML = this.resources.wood;
-                document.getElementById("totalcoal").innerHTML = this.resources.coal;
-                document.getElementById("totalenergy").innerHTML = this.resources.energy;
-                // document.getElementById("woodpersec").innerHTML = ;
-                // document.getElementById("coalpersec").innerHTML = ;
-                // document.getElementById("energypersec").innerHTML = ;
-                // // upgrade cost //
-                // document.getElementById("lumberjack").innerHTML = ;
-                // document.getElementById("coalmine").innerHTML = ;
-                // document.getElementById("powerplant").innerHTML = ;
-                // // subUpgrade cost //
-                // document.getElementById("jacksaws").innerHTML = ;
-                // document.getElementById("powersaws").innerHTML = ;
-                // document.getElementById("heavylogger").innerHTML = ;
-                // document.getElementById("moreminers").innerHTML = ;
-                // document.getElementById("evenmoreminers").innerHTML = ;
-                // document.getElementById("mineshafts").innerHTML = ;
-                // document.getElementById("morepower").innerHTML = ;
-                // document.getElementById("evenmorepower").innerHTML = ;
-                // document.getElementById("mostpower").innerHTML = ;
-                // // upgrade count //
-                document.getElementById("lumberjackcount").innerHTML = this.producers.lumberjack ;
-                document.getElementById("coalminecount").innerHTML = this.producers.coalMine;
-                document.getElementById("powerplantcount").innerHTML = this.producers.powerPlant;
-                // // subUpgrade count //
-                // document.getElementById("jacksawscount").innerHTML = ;
-                // document.getElementById("powersawscount").innerHTML = ;
-                // document.getElementById("heavymachinescount").innerHTML = ;
-                // document.getElementById("moreminerscount").innerHTML = ;
-                // document.getElementById("evenmoreminerscount").innerHTML = ;
-                // document.getElementById("mineshaftscount").innerHTML = ;
-                // document.getElementById("morepowercount").innerHTML = ;
-                // document.getElementById("evenmorepowercount").innerHTML = ;
-                // document.getElementById("mostpowercount").innerHTML = ;
+        // // bonuses per sec //
+        // document.getElementById("scorepersec").innerHTML = ;
+        // document.getElementById("pollutionpersec").innerHTML = ;
+        // document.getElementById("fossilfuelpersec").innerHTML = ;        
+        // // game counters //
+        // document.getElementById("totalclicks").innerHTML = ;
+        // document.getElementById("score").innerHTML = ;
+        // document.getElementById("totalfossilfuel").innerHTML = ;
+        // // resource count //
+        document.getElementById("population").innerHTML = this.resources.population;
+        document.getElementById("pollution").innerHTML = this.resources.pollution;
+        document.getElementById("totaltrees").innerHTML = this.resources.wood;
+        document.getElementById("totalcoal").innerHTML = this.resources.coal;
+        document.getElementById("totalenergy").innerHTML = this.resources.energy;
+        // document.getElementById("woodpersec").innerHTML = ;
+        // document.getElementById("coalpersec").innerHTML = ;
+        // document.getElementById("energypersec").innerHTML = ;
+        // // upgrade cost //
+        document.getElementById("lumberjack").innerHTML = config.producers[0].purchaseCosts[1].base;
+        // document.getElementById("coalmine").innerHTML = ;
+        // document.getElementById("powerplant").innerHTML = ;
+        // // subUpgrade cost //
+        // document.getElementById("jacksaws").innerHTML = ;
+        // document.getElementById("powersaws").innerHTML = ;
+        // document.getElementById("heavylogger").innerHTML = ;
+        // document.getElementById("moreminers").innerHTML = ;
+        // document.getElementById("evenmoreminers").innerHTML = ;
+        // document.getElementById("mineshafts").innerHTML = ;
+        // document.getElementById("morepower").innerHTML = ;
+        // document.getElementById("evenmorepower").innerHTML = ;
+        // document.getElementById("mostpower").innerHTML = ;
+        // // upgrade count //
+        document.getElementById("lumberjackcount").innerHTML = this.producers.lumberjack ;
+        document.getElementById("coalminecount").innerHTML = this.producers.coalMine;
+        document.getElementById("powerplantcount").innerHTML = this.producers.powerPlant;
+        // // subUpgrade count //
+        // document.getElementById("jacksawscount").innerHTML = ;
+        // document.getElementById("powersawscount").innerHTML = ;
+        // document.getElementById("heavymachinescount").innerHTML = ;
+        // document.getElementById("moreminerscount").innerHTML = ;
+        // document.getElementById("evenmoreminerscount").innerHTML = ;
+        // document.getElementById("mineshaftscount").innerHTML = ;
+        // document.getElementById("morepowercount").innerHTML = ;
+        // document.getElementById("evenmorepowercount").innerHTML = ;
+        // document.getElementById("mostpowercount").innerHTML = ;
     }
 
     stateUpdate() {
