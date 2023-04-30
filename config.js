@@ -2,6 +2,7 @@ export const config = {
     producers: [
         {
             name: "lumberjack",
+            // quantity: 1,
             purchaseCosts: [
                 {
                     currency: "population",
@@ -29,7 +30,7 @@ export const config = {
             production: [
                 {
                     currency: "wood",
-                    base: 1,
+                    base: 10,
                 },                  
                 {
                     currency: "money",
@@ -118,7 +119,6 @@ export const config = {
             ],
         },
     ],
-
 };
 
 // export default config;

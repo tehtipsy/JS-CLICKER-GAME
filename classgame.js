@@ -34,6 +34,7 @@ class Game {
     updateProducer(producer) {
         // const config = {}; // get config - ES6 import
         const success = this.consumeCosts(producer, config);
+        console.log(success)
         this.produce(producer, success, config);
         // this.producePollution(producer, success, config); // redundent ?
     };
