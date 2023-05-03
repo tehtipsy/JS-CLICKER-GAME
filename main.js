@@ -7,7 +7,7 @@ class Game {
             population: 0,
             pollution: 0,
             wood: 100,
-            coal: 0,
+            coal: 100,
             energy: 0,
         };
         this.producers = { // move to config
@@ -40,6 +40,7 @@ class Game {
 
     // check producer upkeep and then produce
     updateProducer(producer) {
+        // this.getNumberOfActiveProducers(producer, config); // test
         const success = this.consumeCosts(producer, config);
         this.produce(producer, success, config);
         // console.log(success) // ???
@@ -56,9 +57,18 @@ class Game {
         return this.producers[this.getProducerName(producer)]
     };
 
-    getNumberOfActiveProducers(producer) {
+    getNumberOfActiveProducers(producer, config) {
         // compere number of producers to upkeep costs 
-        // return numberSucceeded
+        let numberOfResourcesAvailable = 0
+        config.producers[producer].upkeepCosts.forEach(upkeepResource => {
+            if (this.resources[upkeepResource.currency] >= upkeepResource.base) {
+                console.log(this.resources[upkeepResource.currency]);
+                numberOfResourcesAvailable++;
+            }
+            // else {}
+        });
+        console.log(numberOfResourcesAvailable);
+        return numberOfResourcesAvailable
     };
 
     // fix this mess
@@ -66,12 +76,16 @@ class Game {
         // get number of active producers somewhere
         let numberSucceeded = 0
         config.producers[producer].upkeepCosts.forEach(resource => {
-            if (this.resources[resource.currency] >= resource.base) {
-                console.log(this.getProducerName(producer))
-                console.log(this.getNumberOfProducers(producer))
-                this.resources[resource.currency] -= resource.base * this.getNumberOfProducers(producer) // move to diffrent function
+            if (this.resources[resource.currency] >= resource.base) { // add * active
+                // console.log(this.getProducerName(producer))
+                // console.log(this.getNumberOfProducers(producer))
+                this.resources[resource.currency] -= resource.base 
+                * this.getNumberOfProducers(producer) // move to diffrent function
                 numberSucceeded++ // fix this
             }
+            // else {
+
+            // }
         }); return numberSucceeded
     };
     
@@ -137,7 +151,7 @@ class Game {
         // document.getElementById("morepowercount").innerHTML = ;
         // document.getElementById("evenmorepowercount").innerHTML = ;
         // document.getElementById("mostpowercount").innerHTML = ;
-    }
+    };
 
     stateUpdate() {
         this.updateAutoProduction();
@@ -148,20 +162,20 @@ class Game {
     update() {
         this.stateUpdate();
         this.draw();
-    }
+    };
 
     // ...
     // every button press is here (preferably parametrically)
     buttonPress(buttonParams) {
         // do the button press
-    }
-}
+    };
+};
 
 // function addEventsToButtons(game) {
 //     document.getElementById('mybutton').addEventListener(e => {
 //         game.buttonPress('sexy button');
 //     });
-// }
+// };
 
 let game = new Game();
 
