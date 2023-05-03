@@ -56,6 +56,11 @@ class Game {
         return this.producers[this.getProducerName(producer)]
     };
 
+    getNumberOfActiveProducers(producer) {
+        // compere number of producers to upkeep costs 
+        // return numberSucceeded
+    };
+
     // fix this mess
     consumeCosts(producer, config) {
         // get number of active producers somewhere
