@@ -41,7 +41,7 @@ class Game {
     // check producer upkeep and then produce
     updateProducer(producer) {
         // this.getNumberOfActiveProducers(producer, config); // test
-        const success = this.consumeCosts(producer, config);
+        const success = this.consumeUpkeepCosts(producer, config);
         this.produce(producer, success, config);
         // console.log(success) // ???
         // this.producePollution(producer, success, config); // redundent ?
@@ -52,7 +52,7 @@ class Game {
         return Object.keys(this.producers)[producer]
     };
 
-    // get number of producers using name
+    // get total number of producers using name
     getNumberOfProducers(producer) {
         return this.producers[this.getProducerName(producer)]
     };
@@ -71,14 +71,230 @@ class Game {
         return numberOfResourcesAvailable
     };
 
+    // // chatGPT 5
+    // consumeUpkeepCosts(producer, config) {
+    //     const numProducers = this.getNumberOfProducers(producer);
+    //     let numFueled = 0;
+    
+    //     config.producers[producer].upkeepCosts.forEach(resources => {
+    //         let costPerProducer = 0;
+    //         for (const resource of Object.values(resources)) {
+    //             if (typeof resource === "object" && resource.base !== undefined) {
+    //                 costPerProducer += resource.base;
+    //             }
+    //         }
+    //         costPerProducer *= numProducers;
+    
+    //         const canAffordAllResources = Object.values(resources).every(resource => {
+    //             if (typeof resource === "object" && resource.base !== undefined) {
+    //                 return this.resources[resource.currency] >= resource.base * numProducers;
+    //             }
+    //             return true;
+    //         });
+    
+    //         if (canAffordAllResources) {
+    //             for (const resource of Object.values(resources)) {
+    //                 if (typeof resource === "object" && resource.base !== undefined) {
+    //                     const numResourceNeeded = Math.ceil(resource.base * numProducers / resource.base);
+    //                     const numResourceConsumed = numResourceNeeded * numProducers;
+    //                     this.resources[resource.currency] -= numResourceConsumed;
+    //                 }
+    //             }
+    //             numFueled += numProducers;
+    //         } else {
+    //             let numFueledThisResource = 0;
+    //             for (const resource of Object.values(resources)) {
+    //                 if (typeof resource === "object" && resource.base !== undefined) {
+    //                     const availableResources = this.resources[resource.currency];
+    //                     if (availableResources >= resource.base) {
+    //                         const numResourceNeeded = Math.ceil(costPerProducer / resource.base);
+    //                         const numResourceConsumed = numResourceNeeded * numProducers;
+    //                         this.resources[resource.currency] -= numResourceConsumed;
+    //                         numFueledThisResource += numProducers;
+    //                     } else if (availableResources > 0) {
+    //                         const numResourceConsumed = Math.floor(availableResources / resource.base);
+    //                         this.resources[resource.currency] -= numResourceConsumed * resource.base;
+    //                         numFueledThisResource += numResourceConsumed;
+    //                     }
+    //                 }
+    //             }
+    //             if (numFueledThisResource > 0) {
+    //                 numFueled += numFueledThisResource;
+    //             } else {
+    //                 return 0;
+    //             }
+    //         }
+    //     });
+    
+    //     return numFueled;
+    // }
+
+    // // chatGPT 4
+    // consumeUpkeepCosts(producer, config) {
+    //     const numProducers = this.getNumberOfProducers(producer);
+    //     let numFueled = 0;
+    
+    //     config.producers[producer].upkeepCosts.forEach(resourceArray => {
+    //         const costPerProducer = resourceArray.reduce((total, resource) => {
+    //             return total + resource.base;
+    //         }, 0) * numProducers;
+    
+    //         const canAffordAllResources = resourceArray.every(resource => {
+    //             return this.resources[resource.currency] >= resource.base * numProducers;
+    //         });
+    
+    //         if (canAffordAllResources) {
+    //             resourceArray.forEach(resource => {
+    //                 const numResourceNeeded = Math.ceil(resource.base * numProducers / resource.base);
+    //                 const numResourceConsumed = numResourceNeeded * numProducers;
+    //                 this.resources[resource.currency] -= numResourceConsumed;
+    //             });
+    //             numFueled += numProducers;
+    //         } else {
+    //             let numFueledThisResource = 0;
+    //             resourceArray.forEach(resource => {
+    //                 const availableResources = this.resources[resource.currency];
+    //                 if (availableResources >= resource.base) {
+    //                     const numResourceNeeded = Math.ceil(costPerProducer / resource.base);
+    //                     const numResourceConsumed = numResourceNeeded * numProducers;
+    //                     this.resources[resource.currency] -= numResourceConsumed;
+    //                     numFueledThisResource += numProducers;
+    //                 } else if (availableResources > 0) {
+    //                     const numResourceConsumed = Math.floor(availableResources / resource.base);
+    //                     this.resources[resource.currency] -= numResourceConsumed * resource.base;
+    //                     numFueledThisResource += numResourceConsumed;
+    //                 }
+    //             });
+    //             if (numFueledThisResource > 0) {
+    //                 numFueled += numFueledThisResource;
+    //             } else {
+    //                 return 0;
+    //             }
+    //         }
+    //     });
+    
+    //     return numFueled;
+    // };
+
+    // // chatGPT 3
+    // consumeUpkeepCosts(producer, config) {
+    //     const numProducers = this.getNumberOfProducers(producer);
+    //     let numFueled = 0;
+    
+    //     config.producers[producer].upkeepCosts.forEach(resourceArrayObject => {
+    //         // const resourceArray = Object.entries(resourceArrayObject)
+    //         const resourceArray = Object.entries(resourceArrayObject).map(([name, value]) => {
+    //             return { name, base: value };
+    //           });
+    //         console.log(resourceArray)
+    //         const costPerProducer = resourceArray.reduce((total, resource) => {
+    //             return total + resource.base;
+    //         }, 0) * numProducers;
+    
+    //         const canAffordAllResources = resourceArray.every(resource => {
+    //             return this.resources[resource.currency] >= resource.base * numProducers;
+    //         });
+    
+    //         if (canAffordAllResources) {
+    //             resourceArray.forEach(resource => {
+    //                 const numResourceNeeded = Math.ceil(resource.base * numProducers / resource.base);
+    //                 const numResourceConsumed = numResourceNeeded * numProducers;
+    //                 this.resources[resource.currency] -= numResourceConsumed;
+    //             });
+    //             numFueled += numProducers;
+    //         } else {
+    //             let numFueledThisResource = 0;
+    //             resourceArray.forEach(resource => {
+    //                 const availableResources = this.resources[resource.currency];
+    //                 if (availableResources >= resource.base) {
+    //                     const numResourceNeeded = Math.ceil(costPerProducer / resource.base);
+    //                     const numResourceConsumed = numResourceNeeded * numProducers;
+    //                     this.resources[resource.currency] -= numResourceConsumed;
+    //                     numFueledThisResource += numProducers;
+    //                 } else if (availableResources > 0) {
+    //                     const numResourceConsumed = Math.floor(availableResources / resource.base);
+    //                     this.resources[resource.currency] -= numResourceConsumed * resource.base;
+    //                     numFueledThisResource += numResourceConsumed;
+    //                 }
+    //             });
+    //             if (numFueledThisResource > 0) {
+    //                 numFueled += numFueledThisResource;
+    //             } else {
+    //                 return 0;
+    //             }
+    //         }
+    //     });
+    
+    //     return numFueled;
+    // };
+    
+    // // chatGPT one kind of resource per producer
+    //     consumeUpkeepCosts(producer, config) {
+        //         const numProducers = this.getNumberOfProducers(producer);
+        //         let numFueled = 0;
+        
+        //         config.producers[producer].upkeepCosts.forEach(resource => {
+            //             const costPerProducer = resource.base * numProducers;
+            //             const availableResources = this.resources[resource.currency];
+            
+            //             if (availableResources >= costPerProducer) {
+                //                 const numResourceNeeded = Math.ceil(costPerProducer / resource.base);
+                //                 const numResourceConsumed = numResourceNeeded * numProducers;
+                //                 this.resources[resource.currency] -= numResourceConsumed;
+                //                 numFueled += numProducers;
+                //             } else if (availableResources > 0) {
+                    //                 const numResourceConsumed = Math.floor(availableResources / resource.base);
+                    //                 this.resources[resource.currency] -= numResourceConsumed * resource.base;
+                    //                 numFueled += numResourceConsumed;
+                    //             }
+                    //         });
+                    //         console.log(numFueled)
+                    //         return numFueled;
+                    //     };
+                    
+                    // // chatGPT 2
+                    //     consumeUpkeepCosts(producer, config) {
+                        //         const numProducers = this.getNumberOfProducers(producer);
+                        //         let numFueled = 0;
+                        
+                        //         config.producers[producer].upkeepCosts.forEach(upkeepCost => {
+                            //             let allResourcesAvailable = true;
+                            //             let totalResourceConsumed = 0;
+                            
+                            //             upkeepCost.resources.forEach(resource => {
+                                //                 const costPerProducer = resource.base * numProducers;
+                                //                 const availableResources = this.resources[resource.currency];
+                                
+                                //                 if (availableResources < costPerProducer) {
+                                    //                     allResourcesAvailable = false;
+                                    //                     return;
+                                    //                 }
+                                    
+                                    //                 const numResourceNeeded = Math.ceil(costPerProducer / resource.base);
+                                    //                 const numResourceConsumed = numResourceNeeded * numProducers;
+                                    //                 this.resources[resource.currency] -= numResourceConsumed;
+                                    //                 totalResourceConsumed += numResourceConsumed;
+                                    //             });
+                                    
+                                    //             if (allResourcesAvailable) {
+//                 numFueled += numProducers;
+//             } else if (totalResourceConsumed > 0) {
+    //                 numFueled += Math.floor(totalResourceConsumed / upkeepCost.totalBase);
+    //             }
+    //         });
+    
+    //         console.log(numFueled)
+    //         return numFueled;
+    //     };
+    
+    
     // fix this mess
-    consumeCosts(producer, config) {
+    consumeUpkeepCosts(producer, config) {
         // get number of active producers somewhere
         let numberSucceeded = 0
         config.producers[producer].upkeepCosts.forEach(resource => {
-            if (this.resources[resource.currency] >= resource.base) { // add * active
-                // console.log(this.getProducerName(producer))
-                // console.log(this.getNumberOfProducers(producer))
+            if (this.resources[resource.currency] >= resource.base
+                * this.getNumberOfProducers(producer)) { // add * active
                 this.resources[resource.currency] -= resource.base 
                 * this.getNumberOfProducers(producer) // move to diffrent function
                 numberSucceeded++ // fix this
@@ -88,22 +304,22 @@ class Game {
             // }
         }); return numberSucceeded
     };
-    
+
     // produce resources times number of "active producers"
     produce(producer, numberSucceeded, config) {
         config.producers[producer].production.forEach(resource => {
             this.resources[resource.currency] += resource.base * numberSucceeded;
         });
     };
-
+    
     producePollution(producer, config, numberSucceeded) {
         // produce pollution
     };
-
+    
     sellResouces(sellConfig) {
         // TBD
     };
-
+    
     draw() {
         // draw ALL THE THINGS
         // // upgrade count //
