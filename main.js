@@ -72,6 +72,7 @@ class Game {
         let numberFeuled = 0
         config.producers[producer].upkeepCosts.forEach(upkeepResource => {
             if (this.resources[upkeepResource.currency] >= upkeepResource.base * this.getNumberOfProducers(producer)) {
+            // && config.producers[producer].upkeepCosts.length >= somthing) {
                 numberFeuled++;
             }
         });
