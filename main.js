@@ -3,7 +3,7 @@ import { config } from "./config.js";
 class Game {
     constructor() {
         this.resources = { // move to config
-            money: 10000000,
+            money: 100000,
             population: 0,
             pollution: 0,
             wood: 100,
