@@ -71,7 +71,8 @@ class Game {
     compereUpkeep(producer) {
         let numberFeuled = 0
         config.producers[producer].upkeepCosts.forEach(upkeepResource => {
-            if (this.resources[upkeepResource.currency] >= upkeepResource.base * this.getNumberOfProducers(producer)) {
+            let amountNeeded = upkeepResource.base * this.getNumberOfProducers(producer)
+            if (this.resources[upkeepResource.currency] >= amountNeeded) {
             // && config.producers[producer].upkeepCosts.length >= somthing) {
                 numberFeuled++;
             }

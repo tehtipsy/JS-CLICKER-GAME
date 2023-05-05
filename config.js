@@ -62,7 +62,7 @@ export const config = {
                     currency: "money",
                     base: 2500,
                     currencyGrowth: "1",
-                },                  
+                },
                 {
                     currency: "wood",
                     base: 1,
