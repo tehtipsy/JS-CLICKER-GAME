@@ -3,7 +3,7 @@ import { config } from "./config.js";
 class Game {
     constructor() {
         this.resources = { // move to config
-            money: 10000,
+            money: 10000000,
             population: 0,
             pollution: 0,
             wood: 100,
@@ -79,7 +79,7 @@ class Game {
             console.log(numberSucceeded)
         } 
         console.log(numberSucceeded)
-        return numberSucceeded
+        return numberSucceeded * this.getNumberOfProducers(producer)
     };
 
     // make work plz 
