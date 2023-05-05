@@ -12,7 +12,7 @@ class Game {
         };
         this.producers = { // move to config
             lumberjack: 0,
-            coalMine: 2,
+            coalMine: 3,
             powerPlant: 1,
         };
     };
@@ -24,24 +24,22 @@ class Game {
 
     // get producer Index from config file
     findProducerIndex(producer) { 
-        const producerIndex = config.producers.findIndex(p => p.name === producer);
-        return producerIndex
+        return config.producers.findIndex(p => p.name === producer);
     }; 
 
     // update producers using config index
     updateAllProducers() {
         Object.keys(this.producers).forEach(producer => {
             if (this.producers[producer] >= 1) { // ???
-                const producerIndex = this.findProducerIndex(producer);
-                this.updateProducer(producerIndex);
+                this.updateProducer(this.findProducerIndex(producer));
             }
         });
     };
 
     // check producer upkeep and then produce
     updateProducer(producer) {
-        const success = this.compereUpkeep(producer) // test
-        this.consume(producer, success, config); // make this work
+        const success = this.compereUpkeep(producer)
+        this.consume(producer, success, config);
         this.produce(producer, success, config);
     };
 
@@ -55,8 +53,8 @@ class Game {
         return this.producers[this.getProducerName(producer)]
     };
 
-    // fix cmnt - get total amount of resource needed for producers
-    getAmountNeededForUpkeep(producer) {
+    // get number of resource available for producers upkeep
+    getAvailableForUpkeep(producer) {
         let availableResources = 0
         config.producers[producer].upkeepCosts.forEach(upkeepResource => {
             if (this.resources[upkeepResource.currency] >= upkeepResource.base * this.getNumberOfProducers(producer)) {
@@ -66,20 +64,16 @@ class Game {
         return availableResources
     };
 
-    // fix cmnt - number of times upkeep can be paid
+    // check if all of producers upkeep costs are met
     compereUpkeep(producer) {
-        const numberOfResourcesAvailable = this.getAmountNeededForUpkeep(producer)
+        const numberOfResourcesAvailable = this.getAvailableForUpkeep(producer)
         const numberOfResourcesNeeded = config.producers[producer].upkeepCosts.length
         let numberSucceeded = 0
-        // FIX THIS
+ 
         if (numberOfResourcesAvailable === numberOfResourcesNeeded) {
             numberSucceeded++
-            console.log(numberOfResourcesNeeded)
-            console.log(numberOfResourcesAvailable)
-            console.log(numberSucceeded)
         } 
-        console.log(numberSucceeded)
-        return numberSucceeded * this.getNumberOfProducers(producer)
+        return numberSucceeded * this.getNumberOfProducers(producer) // DUMB??? YES
     };
 
     // make work plz 
