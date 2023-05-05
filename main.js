@@ -3,11 +3,11 @@ import { config } from "./config.js";
 class Game {
     constructor() {
         this.resources = { // move to config
-            money: 0,
+            money: 10000,
             population: 0,
             pollution: 0,
             wood: 100,
-            coal: 100,
+            coal: 0,
             energy: 0,
         };
         this.producers = { // move to config
@@ -40,10 +40,6 @@ class Game {
 
     // check producer upkeep and then produce
     updateProducer(producer) {
-        // const success = this.getNumberOfProducers(producer) // test
-        // this.compereUpkeep(producer) // test
-        // const success = this.consumeUpkeepCosts(producer, config);
-        // const success = this.consume(producer, success, config); // make this work
         const success = this.compereUpkeep(producer) // test
         this.consume(producer, success, config); // make this work
         this.produce(producer, success, config);
@@ -59,53 +55,31 @@ class Game {
         return this.producers[this.getProducerName(producer)]
     };
 
-    // get total amount of resource needed for producers
+    // fix cmnt - get total amount of resource needed for producers
     getAmountNeededForUpkeep(producer) {
-        config.producers[producer].upkeepCosts.forEach(upkeepResource => {
-            // console.log(upkeepResource.base * this.getNumberOfProducers(producer));
-            // use this amount to see how many producers can be fueled
-        });
-    };
-
-    // number of times upkeep can be paid
-    compereUpkeep(producer) {
-        let numberFeuled = 0
+        let availableResources = 0
         config.producers[producer].upkeepCosts.forEach(upkeepResource => {
             if (this.resources[upkeepResource.currency] >= upkeepResource.base * this.getNumberOfProducers(producer)) {
-            // && config.producers[producer].upkeepCosts.length >= somthing) {
-                numberFeuled++;
+                availableResources++;
             }
         });
-        return numberFeuled
+        return availableResources
     };
 
-    getNumberOfResourcesAvailable(producer, config) {
-        // compere number of producers to upkeep costs 
-        let numberOfResourcesAvailable = 0
-        config.producers[producer].upkeepCosts.forEach(upkeepResource => {
-            if (this.resources[upkeepResource.currency] >= upkeepResource.base) {
-                numberOfResourcesAvailable++;
-            }
-        });
-        console.log(numberOfResourcesAvailable);
-        return numberOfResourcesAvailable
-    };
-
-    // fix this mess
-    consumeUpkeepCosts(producer, config) {
-        // get number of active producers somewhere
+    // fix cmnt - number of times upkeep can be paid
+    compereUpkeep(producer) {
+        const numberOfResourcesAvailable = this.getAmountNeededForUpkeep(producer)
+        const numberOfResourcesNeeded = config.producers[producer].upkeepCosts.length
         let numberSucceeded = 0
-        config.producers[producer].upkeepCosts.forEach(resource => {
-            if (this.resources[resource.currency] >= resource.base
-                * this.getNumberOfProducers(producer)) { // add * active
-                this.resources[resource.currency] -= resource.base 
-                * this.getNumberOfProducers(producer) // move to diffrent function
-                numberSucceeded++ // fix this
-            }
-            // else {
-
-            // }
-        }); return numberSucceeded
+        // FIX THIS
+        if (numberOfResourcesAvailable === numberOfResourcesNeeded) {
+            numberSucceeded++
+            console.log(numberOfResourcesNeeded)
+            console.log(numberOfResourcesAvailable)
+            console.log(numberSucceeded)
+        } 
+        console.log(numberSucceeded)
+        return numberSucceeded
     };
 
     // make work plz 
