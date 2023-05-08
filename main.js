@@ -20,6 +20,8 @@ class Game {
     // update resources automagicly
     updateAutoProduction() {
         this.resources.population++; // SUPPLY PLACEHOLDER
+        // this.resources.money+=10000; // TEST
+        // this.producers.coalMine+=1; // TEST
     };
 
     // get producer Index from config file
@@ -30,7 +32,7 @@ class Game {
     // update producers using config index
     updateAllProducers() {
         Object.keys(this.producers).forEach(producer => {
-            if (this.producers[producer] >= 1) { // ???
+            if (this.producers[producer] >= 1) { // check producer count
                 this.updateProducer(this.findProducerIndex(producer));
             }
         });
@@ -38,6 +40,8 @@ class Game {
 
     // check producer upkeep and then produce
     updateProducer(producer) {
+        // const success = this.getNumberOfActiveProducers(producer)
+        // this.getNumberOfActiveProducers(producer)
         const success = this.compereUpkeep(producer)
         this.consume(producer, success);
         this.produce(producer, success);        
@@ -61,7 +65,6 @@ class Game {
                 availableResources++;
             // FUCK ME SIDEWAYS // move this mess to getNumberOfActiveProducers and change updateProducer
             } else if (this.resources[upkeepResource.currency] < upkeepResource.base * this.getNumberOfProducers(producer)) {
-                // console.log(Math.floor(this.resources[upkeepResource.currency] / upkeepResource.base))
                 const success = Math.floor(this.resources[upkeepResource.currency] / upkeepResource.base)
                 this.consume(producer, success);
                 this.produce(producer, success);
@@ -75,26 +78,25 @@ class Game {
         const numberOfResourcesAvailable = this.getAvailableForUpkeep(producer)
         const numberOfResourcesNeeded = config.producers[producer].upkeepCosts.length
         let numberSucceeded = 0
-        
         if (numberOfResourcesAvailable === numberOfResourcesNeeded) {
             numberSucceeded++
         }
         return numberSucceeded * this.getNumberOfProducers(producer)
     };
 
-    // // get the number of active producers like a sane person
-    // getNumberOfActiveProducers(producer) {
-    //     // const numberOfProducers = this.getNumberOfProducers(producer)
-    //     // const activeProducers = 
-    //     // config.producers[producer].upkeepCosts.forEach(upkeepResource => {
-    //     //     if (this.resources[upkeepResource.currency] >= upkeepResource.base) {
-    //     //         console.log(Math.floor(this.resources[upkeepResource.currency] / upkeepResource.base))
-    //     //     }
-    //     // }); 
-    //     // return activeProducers
-    // } 
+    // get the number of active producers like a sane person
+    getNumberOfActiveProducers(producer) {
+        let activeProducers = []
+        config.producers[producer].upkeepCosts.forEach(upkeepResource => {
+            if (this.resources[upkeepResource.currency] >= upkeepResource.base) {
+            activeProducers.push(Math.floor(this.resources[upkeepResource.currency] / upkeepResource.base))
+            }
+        }); 
+        console.log(activeProducers)
+        return activeProducers
+    };
 
-    // consume resources times number of "active producers" 
+    // consume upkeep resources times number of "active producers" 
     consume(producer, numberSucceeded) {
         config.producers[producer].upkeepCosts.forEach(resource => {
             this.resources[resource.currency] -= resource.base * numberSucceeded
@@ -106,10 +108,6 @@ class Game {
         config.producers[producer].production.forEach(resource => {
             this.resources[resource.currency] += resource.base * numberSucceeded;
         });
-    };
-    
-    producePollution(producer, config, numberSucceeded) {
-        // produce pollution
     };
     
     sellResouces(sellConfig) {
