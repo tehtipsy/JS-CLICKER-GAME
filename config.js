@@ -1,3 +1,44 @@
+// async function fetchData() {
+//     try {
+//       const response = await fetch('https://example.com/data.json');
+//       if (!response.ok) {
+//         throw new Error('Network response was not OK');
+//       }
+//       const data = await response.json();
+//       // Create an object using the JSON data
+//       const myObject = {
+//         // Define properties using data from the JSON
+//         name: data.name,
+//         age: data.age,
+//         // Add any other properties as needed
+//       };
+//       return myObject;
+//     } catch (error) {
+//       // Handle any errors that occur during the fetch request
+//       console.error('Error:', error);
+//       return null;
+//     }
+//   }
+  
+//   export default fetchData;
+// insted of config import
+// import fetchData from './path/to/fetchData';
+
+// async function useFetchedData() {
+//   const myObject = await fetchData();
+//   if (myObject) {
+//     // Use the fetched data object here
+//     console.log(myObject);
+//   } else {
+//     // Handle the case when there was an error during fetch
+//     console.error('Failed to fetch data');
+//   }
+// }
+
+// useFetchedData();
+
+  
+
 export const config = {
     resources: [
         "money",
@@ -10,7 +51,6 @@ export const config = {
     producers: [
         {
             name: "lumberjack",
-            // quantity: 1,
             purchaseCosts: [
                 {
                     currency: "population",
@@ -29,11 +69,11 @@ export const config = {
                     base: 250,
                     currencyGrowth: "1",
                 },               
-                {
-                    currency: "population",
-                    currencyGrowth: 1,
-                    base: 1,
-                }, 
+                // {
+                //     currency: "population",
+                //     currencyGrowth: 1,
+                //     base: 1,
+                // }, 
             ],
             production: [
                 {
