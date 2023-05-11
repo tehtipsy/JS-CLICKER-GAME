@@ -57,8 +57,8 @@ class Game {
     // get the number of active producers like a sane person
     getNumberOfActiveProducers(producer) {
         const numberOfResourcesNeeded = config.producers[producer].upkeepCosts.length
-        let numberSucceeded = 0
         const activeProducers = []
+        let numberSucceeded = 0
         config.producers[producer].upkeepCosts.forEach(upkeepResource => {
             if (this.resources[upkeepResource.currency] >= upkeepResource.base) {
                 numberSucceeded++
@@ -66,7 +66,6 @@ class Game {
             }
         });
         if (numberOfResourcesNeeded === numberSucceeded) {
-            console.log(Math.min(...activeProducers))
             return Math.min(...activeProducers)
         } 
         else {
@@ -76,11 +75,13 @@ class Game {
     
     // consume upkeep resources times number of "active producers"
     consumeUpkeep(producer) {
+        const numberActive = this.getNumberOfActiveProducers(producer)
+        const totalNumber = this.getTotalNumberOfProducers(producer)
         let numberSucceeded
-        if (this.getNumberOfActiveProducers(producer) >= this.getTotalNumberOfProducers(producer)) {
-            numberSucceeded = this.getTotalNumberOfProducers(producer)
-        } else if (this.getNumberOfActiveProducers(producer) < this.getTotalNumberOfProducers(producer)) {
-            numberSucceeded = this.getNumberOfActiveProducers(producer)       
+        if (numberActive >= totalNumber) {
+            numberSucceeded = totalNumber
+        } else {
+            numberSucceeded = numberActive       
         }
         config.producers[producer].upkeepCosts.forEach(resource => {
             this.resources[resource.currency] -= resource.base * numberSucceeded
