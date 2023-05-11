@@ -3,10 +3,10 @@ import { config } from "./config.js";
 class Game {
     constructor() {
         this.resources = { // move to config
-            money: 10000000,
+            money: 12500,
             population: 0,
             pollution: 0,
-            wood: 100,
+            wood: 2,
             coal: 0,
             energy: 0,
         };
@@ -42,8 +42,10 @@ class Game {
     updateProducer(producer) {
         // const success = this.getNumberOfActiveProducers(producer)
         // this.getNumberOfActiveProducers(producer)
-        const success = this.compereUpkeep(producer)
-        this.consume(producer, success);
+        // console.log(this.getNumberOfActiveProducers(producer))
+        // const success = this.compereUpkeep(producer)
+        // this.consume(producer, success);
+        const success = this.consumeUpkeep(producer) // make this work is work?
         this.produce(producer, success);        
     };
 
@@ -65,9 +67,13 @@ class Game {
                 availableResources++;
             // FUCK ME SIDEWAYS // move this mess to getNumberOfActiveProducers and change updateProducer
             } else if (this.resources[upkeepResource.currency] < upkeepResource.base * this.getNumberOfProducers(producer)) {
-                const success = Math.floor(this.resources[upkeepResource.currency] / upkeepResource.base)
-                this.consume(producer, success);
-                this.produce(producer, success);
+                // return this.getNumberOfActiveProducers(producer)
+                // availableResources = 
+                // const success = Math.floor(this.resources[upkeepResource.currency] / upkeepResource.base)
+                // console.log(this.getNumberOfActiveProducers(producer))
+                // console.log(producer, upkeepResource.currency, success)
+                // this.consume(producer, success);
+                // this.produce(producer, success);
             }
         }); 
         return availableResources
@@ -86,14 +92,40 @@ class Game {
 
     // get the number of active producers like a sane person
     getNumberOfActiveProducers(producer) {
-        let activeProducers = []
+        const numberOfResourcesNeeded = config.producers[producer].upkeepCosts.length
+        let numberSucceeded = 0
+
+        const activeProducers = []
         config.producers[producer].upkeepCosts.forEach(upkeepResource => {
             if (this.resources[upkeepResource.currency] >= upkeepResource.base) {
-            activeProducers.push(Math.floor(this.resources[upkeepResource.currency] / upkeepResource.base))
+                numberSucceeded++
+                activeProducers.push(Math.floor(this.resources[upkeepResource.currency] / upkeepResource.base))
             }
-        }); 
-        console.log(activeProducers)
-        return activeProducers
+        });
+        if (numberOfResourcesNeeded === numberSucceeded) {
+            console.log(Math.min(...activeProducers))
+            return Math.min(...activeProducers)
+        } 
+        else {
+            return 0
+        }
+    };
+
+    consumeUpkeep(producer) {
+        let numberSucceeded = this.getNumberOfActiveProducers(producer)
+        if (numberSucceeded >= this.getNumberOfProducers(producer)) {
+            numberSucceeded = this.getNumberOfProducers(producer)
+            config.producers[producer].upkeepCosts.forEach(resource => {
+                console.log(numberSucceeded)
+                this.resources[resource.currency] -= resource.base * numberSucceeded
+            }); 
+        } else if (numberSucceeded < this.getNumberOfProducers(producer)) {
+            config.producers[producer].upkeepCosts.forEach(resource => {
+                console.log(numberSucceeded)
+                this.resources[resource.currency] -= resource.base * numberSucceeded
+            });         
+        }
+        return numberSucceeded
     };
 
     // consume upkeep resources times number of "active producers" 
