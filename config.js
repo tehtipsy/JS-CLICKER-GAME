@@ -1,4 +1,12 @@
 export const config = {
+    resources: [
+        "money",
+        "population",
+        "pollution",
+        "wood",
+        "coal",
+        "energy",
+    ],
     producers: [
         {
             name: "lumberjack",

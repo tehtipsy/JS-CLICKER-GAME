@@ -2,19 +2,31 @@ import { config } from "./config.js";
 
 class Game {
     constructor() {
-        this.resources = { // move to config
-            money: 12500,
-            population: 0,
-            pollution: 0,
-            wood: 6,
-            coal: 40000,
-            energy: 0,
+        // this.resources = { // move to config
+        //     money: 12500,
+        //     population: 0,
+        //     pollution: 0,
+        //     wood: 6,
+        //     coal: 40000,
+        //     energy: 0,
+        // };
+        // this.producers = {//config.producers.forEach(p => {this.producers[p] = p.name}); // move to config // config.producers.forEach(p => {p.name: 0}); // ???
+        //     lumberjack: 0,
+        //     coalMine: 3,
+        //     powerPlant: 3,
+        // };
+        const initializeResources = () => {
+            const resources = {};
+            config.resources.forEach((resource) => {
+              resources[resource] = 0;
+            });
+            return resources;
         };
-        this.producers = { // move to config
-            lumberjack: 0,
-            coalMine: 3,
-            powerPlant: 3,
-        };
+        this.resources = initializeResources();
+        this.producers = {};
+        config.producers.forEach((producer) => {
+          this.producers[producer.name] = 0;
+        });
     };
     
     // update resources automagicly
