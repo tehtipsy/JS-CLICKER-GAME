@@ -62,7 +62,7 @@ class Game {
             if (this.resources[upkeepResource.currency] >= upkeepResource.base) {
                 activeProducers.push(Math.floor(this.resources[upkeepResource.currency] / upkeepResource.base));
                 numberSucceeded++;
-            }
+            };
         });
         if (numberOfResourcesNeeded === numberSucceeded) {
             return Math.min(...activeProducers);
@@ -71,9 +71,9 @@ class Game {
             return 0;
         };
     };
-    
-    // consume upkeep resources times number of "active producers"
-    consumeUpkeep(producer) {
+
+    // compere upkeep costs with active producers
+    upkeepNumberSucceded(producer) {
         const numberActive = this.getNumberOfActiveProducers(producer);
         const totalNumber = this.getTotalNumberOfProducers(producer);
         let numberSucceeded;
@@ -82,6 +82,12 @@ class Game {
         } else {
             numberSucceeded = numberActive;  
         };
+        return numberSucceeded
+    };
+    
+    // consume upkeep resources times number of "active producers"
+    consumeUpkeep(producer) {
+        const numberSucceeded = this.upkeepNumberSucceded(producer)
         config.producers[producer].upkeepCosts.forEach(resource => {
             this.resources[resource.currency] -= resource.base * numberSucceeded;
         }); 
@@ -107,7 +113,8 @@ class Game {
         if (numberOfResourcesNeeded === numberSucceeded) {
             config.producers[producer].purchaseCosts.forEach(resource => {
                 this.resources[resource.currency] -= resource.base
-            }); return true
+            }); 
+            return true
         } else {
             return false
         };

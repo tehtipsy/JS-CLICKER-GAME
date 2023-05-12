@@ -56,16 +56,16 @@ export const config = {
             upkeepCosts: [    
             ],
             production: [
-                {
-                    currency: "money",
-                    currencyGrowth: 0, // make this work
-                    base: 250,
-                },         
-                {
-                    currency: "wood",
-                    currencyGrowth: 0, // make this work
-                    base: 1,
-                },
+                // {
+                //     currency: "money",
+                //     currencyGrowth: 0, // make this work
+                //     base: 250,
+                // },         
+                // {
+                //     currency: "wood",
+                //     currencyGrowth: 0, // make this work
+                //     base: 1,
+                // },
             ],
         },
         {
