@@ -53,8 +53,8 @@ class Game {
         return this.producers[this.getProducerName(producer)];
     };
 
-    // check number of available resources
-    activeProducersSucceded(producer) {
+    // check available resources
+    producersUpkeepSucceded(producer) {
         const activeProducers = [];
         let numberSucceeded = 0;
         config.producers[producer].upkeepCosts.forEach(upkeepResource => {
@@ -63,16 +63,15 @@ class Game {
                 numberSucceeded++;
             };
         });
-        return [numberSucceeded, Math.min(...activeProducers)]
-        // return Math.min(...activeProducers);
+        return [numberSucceeded, Math.min(...activeProducers)];
     };
 
     // get the number of active producers like a sane person
     getNumberOfActiveProducers(producer) {
         const numberOfResourcesNeeded = config.producers[producer].upkeepCosts.length;
-        const success = this.activeProducersSucceded(producer)
-        const numberSucceeded = success[0]
-        const activeProducers = success[1]
+        const success = this.producersUpkeepSucceded(producer);
+        const numberSucceeded = success[0];
+        const activeProducers = success[1];
         if (numberOfResourcesNeeded === numberSucceeded) {
             return activeProducers;
         } 
@@ -91,7 +90,7 @@ class Game {
         } else {
             numberSucceeded = numberActive;  
         };
-        return numberSucceeded
+        return numberSucceeded;
     };
     
     // consume upkeep resources times number of "active producers"
@@ -100,7 +99,7 @@ class Game {
         config.producers[producer].upkeepCosts.forEach(resource => {
             this.resources[resource.currency] -= resource.base * numberSucceeded;
         }); 
-        return numberSucceeded
+        return numberSucceeded;
     };
 
     // produce resources times number of "active producers"
@@ -118,21 +117,21 @@ class Game {
                 numberSucceeded++;
             };
         }); 
-        return numberSucceeded
+        return numberSucceeded;
     }
 
-    // subtract purchase costs
+    // subtract purchase costs if met
     availableForPurchase(producer) {
         const numberOfResourcesNeeded = config.producers[producer].purchaseCosts.length;
-        const numberSucceeded = this.purchaseCostsSucceeded(producer)
+        const numberSucceeded = this.purchaseCostsSucceeded(producer);
         if (numberOfResourcesNeeded === numberSucceeded) {
             config.producers[producer].purchaseCosts.forEach(resource => {
-                this.resources[resource.currency] -= resource.base
+                this.resources[resource.currency] -= resource.base;
             }); 
-        return true
+            return true;
         } 
         else {
-            return false
+            return false;
         };
     };
 
@@ -140,7 +139,7 @@ class Game {
     purchaseProducer(producer) {
         if (this.availableForPurchase(producer) === true) {
             this.producers[this.getProducerName(producer)]++;
-        }
+        };
     };
     
     sellResouces(sellConfig) {
@@ -210,8 +209,8 @@ class Game {
     buttonPress(producerIndex) {
         switch (producerIndex) {
             case 0: // add case to purchaseProduction.length != 0 ???
-                this.resources["wood"]++ // handle axe production
-                this.resources["money"]+=1000 // handle axe production
+                this.resources["wood"]++; // handle axe production
+                this.resources["money"]+=1000; // handle axe production
                 this.draw();
                 break;
             default:
