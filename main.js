@@ -109,7 +109,7 @@ class Game {
         });
     };
 
-    // check if all purchase costs are met
+    // check how many purchase costs are met
     purchaseCostsSucceeded(producer) {
         let numberSucceeded = 0;
         config.producers[producer].purchaseCosts.forEach(resource => {
@@ -120,7 +120,7 @@ class Game {
         return numberSucceeded;
     }
 
-    // subtract purchase costs if met
+    // subtract purchase costs if they are met
     availableForPurchase(producer) {
         const numberOfResourcesNeeded = config.producers[producer].purchaseCosts.length;
         const numberSucceeded = this.purchaseCostsSucceeded(producer);
@@ -208,7 +208,7 @@ class Game {
 
     buttonPress(producerIndex) {
         switch (producerIndex) {
-            case 0: // add case to purchaseProduction.length != 0 ???
+            case 0: // add case to config.producer[producerIndex].purchaseProduction.length != 0 ???
                 this.resources["wood"]++; // handle axe production
                 this.resources["money"]+=1000; // handle axe production
                 this.draw();
