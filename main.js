@@ -23,11 +23,6 @@ class Game {
         this.resources.population++; // SUPPLY PLACEHOLDER
     };
 
-    // get producer Index from config file
-    findProducerIndex(producer) { 
-        return config.producers.findIndex(p => p.name === producer);
-    }; 
-
     // update producers using config index
     updateAllProducers() {
         Object.keys(this.producers).forEach(producer => {
@@ -42,12 +37,17 @@ class Game {
         const success = this.consumeUpkeep(producer);
         this.produceResources(producer, success);        
     };
+// 
+    // get producer Index from config file
+    findProducerIndex(producer) { 
+        return config.producers.findIndex(p => p.name === producer);
+    }; 
 
     // get name of producer using index
     getProducerName(producer) {
         return Object.keys(this.producers)[producer];
     };
-
+// 
     // get total number of producers using name
     getTotalNumberOfProducers(producer) {
         return this.producers[this.getProducerName(producer)];
@@ -94,6 +94,31 @@ class Game {
             this.resources[resource.currency] += resource.base * numberSucceeded;
         });
     };
+
+    // check if all purchase costs are met
+    availableForPurchase(producer) {
+        const numberOfResourcesNeeded = config.producers[producer].purchaseCosts.length;
+        let numberSucceeded = 0;
+        config.producers[producer].purchaseCosts.forEach(resource => {
+            if (this.resources[resource.currency] >= resource.base) {
+                numberSucceeded++;
+            };
+        }); 
+        if (numberOfResourcesNeeded === numberSucceeded) {
+            config.producers[producer].purchaseCosts.forEach(resource => {
+                this.resources[resource.currency] -= resource.base
+            }); return true
+        } else {
+            return false
+        };
+    };
+
+    // purchase producer if costs are met
+    purchaseProducer(producer) {
+        if (this.availableForPurchase(producer) === true) {
+            this.producers[this.getProducerName(producer)]++;
+        }
+    };
     
     sellResouces(sellConfig) {
         // TBD
@@ -119,7 +144,7 @@ class Game {
         // document.getElementById("coalpersec").innerHTML = ;
         // document.getElementById("energypersec").innerHTML = ;
         // // upgrade cost //
-        document.getElementById("lumberjack").innerHTML = config.producers[0].purchaseCosts[1].base;
+        // document.getElementById("lumberjack").innerHTML = config.producers[0].purchaseCosts[1].base;
         // document.getElementById("coalmine").innerHTML = ;
         // document.getElementById("powerplant").innerHTML = ;
         // // bonuses per sec //
@@ -159,21 +184,30 @@ class Game {
         this.draw();
     };
 
-    // ...
-    // every button press is here (preferably parametrically)
-    buttonPress(buttonParams) {
-        // do the button press
+    buttonPress(producerIndex) {
+        this.purchaseProducer(producerIndex);
+        this.draw();
     };
 };
 
-// function addEventsToButtons(game) {
-//     document.getElementById('mybutton').addEventListener(e => {
-//         game.buttonPress('sexy button');
-//     });
-// };
+function addEventsToButtons(game) {
+    document.getElementById('lumberjack-button').addEventListener('click', e => {
+        game.buttonPress(0); // Index 0 represents the lumberjack producer
+    });
+    document.getElementById('coal-mine-button').addEventListener('click', e => {
+        game.buttonPress(1); // Index 1 represents the coalMine producer
+    });
+    document.getElementById('power-plant-button').addEventListener('click', e => {
+        game.buttonPress(2); // Index 2 represents the powerPlant producer
+    });
+}
 
 let game = new Game();
 
-// addEventsToButtons(game);
-
+addEventsToButtons(game);
+// TEST RESOURCES
+game.resources.money+=1000000;
+game.resources.coal+=100000;
+game.resources.population+=100000;
+// 
 setInterval(() => game.update(), 1000);

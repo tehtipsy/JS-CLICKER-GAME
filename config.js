@@ -57,11 +57,11 @@ export const config = {
                     currencyGrowth: [1],
                     base: 1,
                 },
-                {
-                    currency: "money",
-                    currencyGrowth: "1.1",
-                    base: 2500,
-                },
+                // {
+                //     currency: "money",
+                //     currencyGrowth: "1.1",
+                //     base: 2500,
+                // },
             ],
             upkeepCosts: [
                 {
