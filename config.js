@@ -53,9 +53,7 @@ export const config = {
             name: "axe",
             purchaseCosts: [
             ],
-            upkeepCosts: [    
-            ],
-            production: [
+            purchaseProduction: [
                 // {
                 //     currency: "money",
                 //     currencyGrowth: 0, // make this work
@@ -66,6 +64,10 @@ export const config = {
                 //     currencyGrowth: 0, // make this work
                 //     base: 1,
                 // },
+            ],
+            upkeepCosts: [    
+            ],
+            production: [
             ],
         },
         {
