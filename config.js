@@ -50,6 +50,25 @@ export const config = {
     ],
     producers: [
         {
+            name: "axe",
+            purchaseCosts: [
+            ],
+            upkeepCosts: [    
+            ],
+            production: [
+                {
+                    currency: "money",
+                    currencyGrowth: 0, // make this work
+                    base: 250,
+                },         
+                {
+                    currency: "wood",
+                    currencyGrowth: 0, // make this work
+                    base: 1,
+                },
+            ],
+        },
+        {
             name: "lumberjack",
             purchaseCosts: [
                 {

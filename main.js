@@ -175,7 +175,7 @@ class Game {
 
     stateUpdate() {
         this.updateAutoProduction();
-        this.updateAllProducers(); // build function and config
+        this.updateAllProducers();
         // this.sellResouces(); // TBD
     };
 
@@ -185,20 +185,33 @@ class Game {
     };
 
     buttonPress(producerIndex) {
-        this.purchaseProducer(producerIndex);
-        this.draw();
+        switch (producerIndex) {
+            case 0:
+                this.resources["wood"]++ // handle axe production
+                this.resources["money"]+=1000 // handle axe production
+                this.draw();
+                break;
+
+            default:
+                this.purchaseProducer(producerIndex);
+                this.draw();
+                break;
+        }
     };
 };
 
 function addEventsToButtons(game) {
+    document.getElementById('clicker').addEventListener('click', e => {
+        game.buttonPress(0); // Index 0 represents the axe producer
+    });
     document.getElementById('lumberjack-button').addEventListener('click', e => {
-        game.buttonPress(0); // Index 0 represents the lumberjack producer
+        game.buttonPress(1); // Index 1 represents the lumberjack producer
     });
     document.getElementById('coal-mine-button').addEventListener('click', e => {
-        game.buttonPress(1); // Index 1 represents the coalMine producer
+        game.buttonPress(2); // Index 2 represents the coalMine producer
     });
     document.getElementById('power-plant-button').addEventListener('click', e => {
-        game.buttonPress(2); // Index 2 represents the powerPlant producer
+        game.buttonPress(3); // Index 3 represents the powerPlant producer
     });
 }
 
@@ -206,8 +219,8 @@ let game = new Game();
 
 addEventsToButtons(game);
 // TEST RESOURCES
-game.resources.money+=1000000;
-game.resources.coal+=100000;
-game.resources.population+=100000;
+// game.resources.money+=1000000;
+// game.resources.coal+=100000;
+// game.resources.population+=100000;
 // 
 setInterval(() => game.update(), 1000);
