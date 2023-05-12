@@ -53,9 +53,8 @@ class Game {
         return this.producers[this.getProducerName(producer)];
     };
 
-    // get the number of active producers like a sane person
-    getNumberOfActiveProducers(producer) {
-        const numberOfResourcesNeeded = config.producers[producer].upkeepCosts.length;
+    // check number of available resources
+    activeProducersSucceded(producer) {
         const activeProducers = [];
         let numberSucceeded = 0;
         config.producers[producer].upkeepCosts.forEach(upkeepResource => {
@@ -64,8 +63,18 @@ class Game {
                 numberSucceeded++;
             };
         });
+        return [numberSucceeded, Math.min(...activeProducers)]
+        // return Math.min(...activeProducers);
+    };
+
+    // get the number of active producers like a sane person
+    getNumberOfActiveProducers(producer) {
+        const numberOfResourcesNeeded = config.producers[producer].upkeepCosts.length;
+        const success = this.activeProducersSucceded(producer)
+        const numberSucceeded = success[0]
+        const activeProducers = success[1]
         if (numberOfResourcesNeeded === numberSucceeded) {
-            return Math.min(...activeProducers);
+            return activeProducers;
         } 
         else {
             return 0;
@@ -101,6 +110,7 @@ class Game {
         });
     };
 
+    // check if all purchase costs are met
     purchaseCostsSucceeded(producer) {
         let numberSucceeded = 0;
         config.producers[producer].purchaseCosts.forEach(resource => {
@@ -111,7 +121,7 @@ class Game {
         return numberSucceeded
     }
 
-    // check if all purchase costs are met
+    // subtract purchase costs
     availableForPurchase(producer) {
         const numberOfResourcesNeeded = config.producers[producer].purchaseCosts.length;
         const numberSucceeded = this.purchaseCostsSucceeded(producer)
@@ -119,8 +129,9 @@ class Game {
             config.producers[producer].purchaseCosts.forEach(resource => {
                 this.resources[resource.currency] -= resource.base
             }); 
-            return true
-        } else {
+        return true
+        } 
+        else {
             return false
         };
     };
