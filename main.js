@@ -123,7 +123,6 @@ class Game {
         // // game counters //
         // document.getElementById("totalclicks").innerHTML = ;
         document.getElementById("score").innerHTML = this.resources.money;
-        // document.getElementById("totalfossilfuel").innerHTML = ;
         // // resource count //
         document.getElementById("population").innerHTML = this.resources.population;
         document.getElementById("pollution").innerHTML = this.resources.pollution;
@@ -131,37 +130,6 @@ class Game {
         document.getElementById("totalcoal").innerHTML = this.resources.coal;
         document.getElementById("totalenergy").innerHTML = this.resources.energy;
         document.getElementById("totalfood").innerHTML = this.resources.food;
-        // document.getElementById("woodpersec").innerHTML = ;
-        // document.getElementById("coalpersec").innerHTML = ;
-        // document.getElementById("energypersec").innerHTML = ;
-        // // upgrade cost //
-        // document.getElementById("lumberjack").innerHTML = config.producers[0].purchaseCosts[1].base;
-        // document.getElementById("coalmine").innerHTML = ;
-        // document.getElementById("powerplant").innerHTML = ;
-        // // bonuses per sec //
-        // document.getElementById("scorepersec").innerHTML = ;
-        // document.getElementById("pollutionpersec").innerHTML = ;
-        // document.getElementById("fossilfuelpersec").innerHTML = ;        
-        // // subUpgrade cost //
-        // document.getElementById("jacksaws").innerHTML = ;
-        // document.getElementById("powersaws").innerHTML = ;
-        // document.getElementById("heavylogger").innerHTML = ;
-        // document.getElementById("moreminers").innerHTML = ;
-        // document.getElementById("evenmoreminers").innerHTML = ;
-        // document.getElementById("mineshafts").innerHTML = ;
-        // document.getElementById("morepower").innerHTML = ;
-        // document.getElementById("evenmorepower").innerHTML = ;
-        // document.getElementById("mostpower").innerHTML = ;
-        // // subUpgrade count //
-        // document.getElementById("jacksawscount").innerHTML = ;
-        // document.getElementById("powersawscount").innerHTML = ;
-        // document.getElementById("heavymachinescount").innerHTML = ;
-        // document.getElementById("moreminerscount").innerHTML = ;
-        // document.getElementById("evenmoreminerscount").innerHTML = ;
-        // document.getElementById("mineshaftscount").innerHTML = ;
-        // document.getElementById("morepowercount").innerHTML = ;
-        // document.getElementById("evenmorepowercount").innerHTML = ;
-        // document.getElementById("mostpowercount").innerHTML = ;
     };
 
     stateUpdate() {
@@ -240,7 +208,7 @@ let game = new Game();
 
 addEventsToButtons(game);
 
-// GOD MODEvvv
+// vvv GOD MODE vvv
 function GodMode(game) {
     config.godMode.forEach(item => {
         game.resources[item.currency] += item.base;
@@ -249,6 +217,6 @@ function GodMode(game) {
 };
 
 GodMode(game);
-// GOD MODE^^^
+// ^^^ GOD MODE ^^^
 
 setInterval(() => game.update(), 1000);
