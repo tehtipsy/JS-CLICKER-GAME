@@ -1,6 +1,6 @@
 async function fetchData() {
     try { 
-        const response = await fetch('https://script.google.com/macros/s/AKfycbxt71NixIJRryi1ej77-RACGBCNue6JnAxLfE4qGQOEeoewYfMlDHzlFqKag4J61NiKHg/exec');
+        const response = await fetch('https://script.google.com/macros/s/AKfycbyFjBlZ9So2xd5oL5VzFPsroRZX_6KWpRDavYR0nDHwVzxzfd8ZGjIz1Gy3BfF0FdBVRw/exec');
         if (!response.ok) {
             throw new Error('Network response was not OK');
         }

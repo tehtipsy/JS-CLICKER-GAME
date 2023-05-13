@@ -240,7 +240,7 @@ let game = new Game();
 
 addEventsToButtons(game);
 
-// GOD MODE
+// GOD MODEvvv
 function GodMode(game) {
     config.godMode.forEach(item => {
         game.resources[item.currency] += item.base;
@@ -249,6 +249,6 @@ function GodMode(game) {
 };
 
 GodMode(game);
-// GOD MODE
+// GOD MODE^^^
 
 setInterval(() => game.update(), 1000);
