@@ -208,18 +208,29 @@ class Game {
     };
 
     buttonPress(producerIndex) {
-        switch (producerIndex) {
-            case 0: // add case to config.producer[producerIndex].purchaseProduction.length != 0 ???
-                this.resources["wood"]++; // handle axe production
-                this.resources["money"]+=1000; // handle axe production
-                this.resources["food"]+=10; // handle production
-                this.draw();
-                break;
-            default:
-                this.purchaseProducer(producerIndex);
-                this.draw();
-                break;
-        }
+        this.purchaseProducer(producerIndex);
+
+        config.producers[producerIndex].purchaseProduction.forEach(resource => {
+            this.resources[resource.currency] += resource.base
+        });
+        
+        this.draw();
+        // switch (producerIndex) {
+
+        //     case 0: // add case to config.producer[producerIndex].purchaseProduction.length != 0 ???
+        //         config.producers[producerIndex].purchaseProduction.forEach(resource => {
+        //             this.resources[resource.currency] += resource.base
+        //         });
+        //         // this.resources["wood"]++; // handle axe production
+        //         // this.resources["money"]+=1000; // handle axe production
+        //         // this.resources["food"]+=10; // handle production
+        //         this.draw();
+        //         break;
+        //     default:
+        //         this.purchaseProducer(producerIndex);
+        //         this.draw();
+        //         break;
+        // }
     };
 };
 

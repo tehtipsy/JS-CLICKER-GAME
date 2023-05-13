@@ -1,10 +1,11 @@
 async function fetchData() {
-    try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbzWaydPCzVq09m3-Eg_NBlk0QiHLPM5ny0xHSyZ4mzdO6wSWkApE9Ar1Z7KfuWaVdFcRw/exec');
+    try { 
+        const response = await fetch('https://script.google.com/macros/s/AKfycbw7uOI08NAkpPvk7zCijdlwtfZirr0s-COERBKbrhA3zMSdcy_b2ODuRdvOkvcEHbn_DA/exec');
         if (!response.ok) {
             throw new Error('Network response was not OK');
         }
         const data = await response.json();
+        console.log(data)
         return data;
     } catch (error) {
     // Handle any errors that occur during the fetch request
@@ -22,7 +23,7 @@ async function useFetchedData() {
                 producers: content.producers.map(producer => ({
                     name: producer.name,
                     purchaseCosts: producer.purchaseCosts,
-                    // purchaseProduction: [],
+                    purchaseProduction: producer.purchaseProduction,
                     upkeepCosts: producer.upkeepCosts,
                     production: producer.production
                 }))
