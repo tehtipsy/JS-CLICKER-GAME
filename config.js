@@ -17,21 +17,9 @@ async function useFetchedData() {
     try {
         const { content } = await fetchData();
         if (content) {
-            const config = {
-                godMode: content.godMode,
-                resources: content.resources,
-                autoProduction: content.autoProduction,
-                producers: content.producers.map(producer => ({
-                    name: producer.name,
-                    purchaseCosts: producer.purchaseCosts,
-                    purchaseProduction: producer.purchaseProduction,
-                    upkeepCosts: producer.upkeepCosts,
-                    production: producer.production
-                }))
-            };
-        console.log('Data fetched and assigned to config:', config);
-    // Use the 'config' object as needed
-        return config;
+            const config = {...content};
+            console.log('Data fetched and assigned to config:', config);
+            return config;
         } else {
             console.error('Failed to fetch data');
         }

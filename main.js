@@ -239,15 +239,16 @@ function addEventsToButtons(game) {
 let game = new Game();
 
 addEventsToButtons(game);
-// 
+
+// GOD MODE
 function GodMode(game) {
     config.godMode.forEach(item => {
         game.resources[item.currency] += item.base;
-        // add producer god mode
         game.producers[item.producer] += item.quantity;
     });
 };
 
 GodMode(game);
-// 
+// GOD MODE
+
 setInterval(() => game.update(), 1000);
