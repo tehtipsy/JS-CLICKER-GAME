@@ -121,7 +121,7 @@ class Game {
     }
 
     // subtract purchase costs if they are met
-    availableForPurchase(producer) {
+    ableToPurchase(producer) {
         const numberOfResourcesNeeded = config.producers[producer].purchaseCosts.length;
         const numberSucceeded = this.purchaseCostsSucceeded(producer);
         if (numberOfResourcesNeeded === numberSucceeded) {
@@ -137,7 +137,7 @@ class Game {
 
     // purchase producer if costs are met
     purchaseProducer(producer) {
-        if (this.availableForPurchase(producer) === true) {
+        if (this.ableToPurchase(producer) === true) {
             this.producers[this.getProducerName(producer)]++;
         };
     };
@@ -209,28 +209,10 @@ class Game {
 
     buttonPress(producerIndex) {
         this.purchaseProducer(producerIndex);
-
         config.producers[producerIndex].purchaseProduction.forEach(resource => {
             this.resources[resource.currency] += resource.base
         });
-        
         this.draw();
-        // switch (producerIndex) {
-
-        //     case 0: // add case to config.producer[producerIndex].purchaseProduction.length != 0 ???
-        //         config.producers[producerIndex].purchaseProduction.forEach(resource => {
-        //             this.resources[resource.currency] += resource.base
-        //         });
-        //         // this.resources["wood"]++; // handle axe production
-        //         // this.resources["money"]+=1000; // handle axe production
-        //         // this.resources["food"]+=10; // handle production
-        //         this.draw();
-        //         break;
-        //     default:
-        //         this.purchaseProducer(producerIndex);
-        //         this.draw();
-        //         break;
-        // }
     };
 };
 
@@ -252,7 +234,7 @@ function addEventsToButtons(game) {
 let game = new Game();
 
 addEventsToButtons(game);
-// TEST RESOURCES
+// TEST RESOURCES MOVE TO CONFIG
 // game.resources.money+=1000000;
 // game.resources.coal+=100000;
 // game.resources.population+=100000;
