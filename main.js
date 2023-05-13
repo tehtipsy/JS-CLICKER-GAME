@@ -162,6 +162,7 @@ class Game {
         document.getElementById("totaltrees").innerHTML = this.resources.wood;
         document.getElementById("totalcoal").innerHTML = this.resources.coal;
         document.getElementById("totalenergy").innerHTML = this.resources.energy;
+        document.getElementById("totalfood").innerHTML = this.resources.food;
         // document.getElementById("woodpersec").innerHTML = ;
         // document.getElementById("coalpersec").innerHTML = ;
         // document.getElementById("energypersec").innerHTML = ;
@@ -211,6 +212,7 @@ class Game {
             case 0: // add case to config.producer[producerIndex].purchaseProduction.length != 0 ???
                 this.resources["wood"]++; // handle axe production
                 this.resources["money"]+=1000; // handle axe production
+                this.resources["food"]+=10; // handle production
                 this.draw();
                 break;
             default:

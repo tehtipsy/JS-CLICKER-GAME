@@ -7,7 +7,7 @@ async function fetchData() {
         const data = await response.json();
         return data;
     } catch (error) {
-        // Handle any errors that occur during the fetch request
+    // Handle any errors that occur during the fetch request
         console.error('Error:', error);
         return null;
     }
@@ -20,16 +20,16 @@ async function useFetchedData() {
             const config = {
                 resources: content.resources,
                 producers: content.producers.map(producer => ({
-                name: producer.name,
-                purchaseCosts: producer.purchaseCosts,
-                // purchaseProduction: [],
-                upkeepCosts: producer.upkeepCosts,
-                production: producer.production
-            }))
-        };
+                    name: producer.name,
+                    purchaseCosts: producer.purchaseCosts,
+                    // purchaseProduction: [],
+                    upkeepCosts: producer.upkeepCosts,
+                    production: producer.production
+                }))
+            };
         console.log('Data fetched and assigned to config:', config);
-        // Use the 'config' object as needed
-        return config
+    // Use the 'config' object as needed
+        return config;
         } else {
             console.error('Failed to fetch data');
         }
