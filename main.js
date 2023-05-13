@@ -200,13 +200,6 @@ class Game {
         };
     };
 
-    // purchase producer if costs are met
-    purchaseProducer(producer) {
-        if (this.ableToPurchase(producer) === true) {
-            this.producers[this.getProducerName(producer)]++;
-        };
-    };
-
     // produce resources on purchase
     produceOnPurchase(producer) {
         config.producers[producer].purchaseProduction.forEach(resource => {
@@ -214,9 +207,16 @@ class Game {
         });
     };
 
+    // purchase producer if costs are met
+    purchaseProducer(producer) {
+        if (this.ableToPurchase(producer) === true) {
+            this.producers[this.getProducerName(producer)]++;
+            this.produceOnPurchase(producer);
+        };
+    };
+
     buttonPress(producer) {
         this.purchaseProducer(producer);
-        this.produceOnPurchase(producer);
         this.draw();
     };
 };
@@ -241,9 +241,10 @@ let game = new Game();
 addEventsToButtons(game);
 // 
 function GodMode(game) {
-    config.godMode.forEach(resource => {
-        game.resources[resource.currency] += resource.base;
+    config.godMode.forEach(item => {
+        game.resources[item.currency] += item.base;
         // add producer god mode
+        game.producers[item.producer] += item.quantity;
     });
 };
 
