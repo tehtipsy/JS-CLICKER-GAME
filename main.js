@@ -239,9 +239,14 @@ function addEventsToButtons(game) {
 let game = new Game();
 
 addEventsToButtons(game);
-// TEST RESOURCES MOVE TO CONFIG
-// game.resources.money+=1000000;
-// game.resources.coal+=100000;
-// game.resources.population+=100000;
+// 
+function GodMode(game) {
+    config.godMode.forEach(resource => {
+        game.resources[resource.currency] += resource.base;
+        // add producer god mode
+    });
+};
+
+GodMode(game);
 // 
 setInterval(() => game.update(), 1000);

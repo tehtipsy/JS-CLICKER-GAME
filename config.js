@@ -1,6 +1,6 @@
 async function fetchData() {
     try { 
-        const response = await fetch('https://script.google.com/macros/s/AKfycbysni0uaa36IuJ6KBgnZLmHxJx6v1up_NrcWsL2mE5Yc0KTzWggORZAD2xfvAGdITLl/exec');
+        const response = await fetch('https://script.google.com/macros/s/AKfycby93OXVt57OH_Jr-95QWABavE6X4bIkoAJbCrZD5Nfsf4IcWGCU37HwtEXgUE_04YZ63g/exec');
         if (!response.ok) {
             throw new Error('Network response was not OK');
         }
@@ -18,6 +18,7 @@ async function useFetchedData() {
         const { content } = await fetchData();
         if (content) {
             const config = {
+                godMode: content.godMode,
                 resources: content.resources,
                 autoProduction: content.autoProduction,
                 producers: content.producers.map(producer => ({
