@@ -4,29 +4,30 @@ class Game {
     constructor() {
         const initializeResources = () => {
             const resources = {};
-            config.resources.forEach((resource) => {
-                resources[resource] = 0;
-            });
+            config.resources.forEach((resource) => {resources[resource] = 0;});
             return resources;
         };
-
         this.resources = initializeResources();
         this.producers = {};
-        
-        config.producers.forEach((producer) => {
-            this.producers[producer.name] = 0;
-        });
+        config.producers.forEach((producer) => {this.producers[producer.name] = 0;});
     };
     
+    // auto produce by config
+    AutoProduce() {
+        config.autoProduction.forEach(resource => {
+            this.resources[resource.currency] += resource.base;
+        });
+    };
+
     // update resources automagicly
-    updateAutoProduction() {
-        this.resources.population++; // SUPPLY PLACEHOLDER
+    updateAutoProduction() { 
+        this.AutoProduce();
     };
 
     // update producers using config index
     updateAllProducers() {
         Object.keys(this.producers).forEach(producer => {
-            if (this.producers[producer] >= 1) { // check producer count
+            if (this.producers[producer] >= 1) {
                 this.updateProducer(this.findProducerIndex(producer));
             };
         });
@@ -57,9 +58,9 @@ class Game {
     producersUpkeepSucceded(producer) {
         const activeProducers = [];
         let numberSucceeded = 0;
-        config.producers[producer].upkeepCosts.forEach(upkeepResource => {
-            if (this.resources[upkeepResource.currency] >= upkeepResource.base) {
-                activeProducers.push(Math.floor(this.resources[upkeepResource.currency] / upkeepResource.base));
+        config.producers[producer].upkeepCosts.forEach(resource => {
+            if (this.resources[resource.currency] >= resource.base) {
+                activeProducers.push(Math.floor(this.resources[resource.currency] / resource.base));
                 numberSucceeded++;
             };
         });
@@ -107,39 +108,6 @@ class Game {
         config.producers[producer].production.forEach(resource => {
             this.resources[resource.currency] += resource.base * numberSucceeded;
         });
-    };
-
-    // check how many purchase costs are met
-    purchaseCostsSucceeded(producer) {
-        let numberSucceeded = 0;
-        config.producers[producer].purchaseCosts.forEach(resource => {
-            if (this.resources[resource.currency] >= resource.base) {
-                numberSucceeded++;
-            };
-        }); 
-        return numberSucceeded;
-    }
-
-    // subtract purchase costs if they are met
-    ableToPurchase(producer) {
-        const numberOfResourcesNeeded = config.producers[producer].purchaseCosts.length;
-        const numberSucceeded = this.purchaseCostsSucceeded(producer);
-        if (numberOfResourcesNeeded === numberSucceeded) {
-            config.producers[producer].purchaseCosts.forEach(resource => {
-                this.resources[resource.currency] -= resource.base;
-            }); 
-            return true;
-        } 
-        else {
-            return false;
-        };
-    };
-
-    // purchase producer if costs are met
-    purchaseProducer(producer) {
-        if (this.ableToPurchase(producer) === true) {
-            this.producers[this.getProducerName(producer)]++;
-        };
     };
     
     sellResouces(sellConfig) {
@@ -206,12 +174,49 @@ class Game {
         this.stateUpdate();
         this.draw();
     };
+    
+    // check how many purchase costs are met
+    purchaseCostsSucceeded(producer) {
+        let numberSucceeded = 0;
+        config.producers[producer].purchaseCosts.forEach(resource => {
+            if (this.resources[resource.currency] >= resource.base) {
+                numberSucceeded++;
+            };
+        }); 
+        return numberSucceeded;
+    };
 
-    buttonPress(producerIndex) {
-        this.purchaseProducer(producerIndex);
-        config.producers[producerIndex].purchaseProduction.forEach(resource => {
-            this.resources[resource.currency] += resource.base
+    // subtract purchase costs if they are met
+    ableToPurchase(producer) {
+        const numberOfResourcesNeeded = config.producers[producer].purchaseCosts.length;
+        const numberSucceeded = this.purchaseCostsSucceeded(producer);
+        if (numberOfResourcesNeeded === numberSucceeded) {
+            config.producers[producer].purchaseCosts.forEach(resource => {
+                this.resources[resource.currency] -= resource.base;
+            }); 
+            return true;
+        } else {
+            return false;
+        };
+    };
+
+    // purchase producer if costs are met
+    purchaseProducer(producer) {
+        if (this.ableToPurchase(producer) === true) {
+            this.producers[this.getProducerName(producer)]++;
+        };
+    };
+
+    // produce resources on purchase
+    produceOnPurchase(producer) {
+        config.producers[producer].purchaseProduction.forEach(resource => {
+            this.resources[resource.currency] += resource.base;
         });
+    };
+
+    buttonPress(producer) {
+        this.purchaseProducer(producer);
+        this.produceOnPurchase(producer);
         this.draw();
     };
 };

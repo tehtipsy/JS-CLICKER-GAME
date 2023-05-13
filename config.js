@@ -1,6 +1,6 @@
 async function fetchData() {
     try { 
-        const response = await fetch('https://script.google.com/macros/s/AKfycbw7uOI08NAkpPvk7zCijdlwtfZirr0s-COERBKbrhA3zMSdcy_b2ODuRdvOkvcEHbn_DA/exec');
+        const response = await fetch('https://script.google.com/macros/s/AKfycbysni0uaa36IuJ6KBgnZLmHxJx6v1up_NrcWsL2mE5Yc0KTzWggORZAD2xfvAGdITLl/exec');
         if (!response.ok) {
             throw new Error('Network response was not OK');
         }
@@ -19,6 +19,7 @@ async function useFetchedData() {
         if (content) {
             const config = {
                 resources: content.resources,
+                autoProduction: content.autoProduction,
                 producers: content.producers.map(producer => ({
                     name: producer.name,
                     purchaseCosts: producer.purchaseCosts,
